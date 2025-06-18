@@ -1,0 +1,7 @@
+body {
+    background-color: yellow;
+}
+
+* {
+    box-sizing: border-box;
+}
