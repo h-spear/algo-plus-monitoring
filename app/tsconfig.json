@@ -8,8 +8,13 @@
         "baseUrl": ".",
         "paths": {
             "@components/*": ["src/components/*"],
-            "@icons/*": ["src/icons/*"],
-            "@themes": ["themes.js"]
-        }
-    }
+            "@icons/*": ["src/components/icons/*"],
+            "@types/*": ["src/components/types/*"],
+            "@services/*": ["src/components/services/*"],
+            "@utils/*": ["src/components/utils/*"],
+            "@themes": ["themes.ts"]
+        },
+        "moduleResolution": "node"
+    },
+    "include": ["src/**/*"]
 }

@@ -1,9 +1,8 @@
 import React from 'react';
 import { Gauge, gaugeClasses } from '@mui/x-charts/Gauge';
 import { colorDark } from '@themes';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
 
-interface UsageDonutWidget {
+interface UsageDonutWidgetProps {
     title: string;
     value: number;
     min?: number;
@@ -16,7 +15,7 @@ interface UsageDonutWidget {
     className?: string;
 }
 
-const UsageDonutWidget: React.FC<UsageDonutWidget> = ({
+const UsageDonutWidget: React.FC<UsageDonutWidgetProps> = ({
     title = '',
     value = 126,
     min = 0,

@@ -16,11 +16,23 @@ export default defineConfig({
             },
             {
                 find: '@icons',
-                replacement: path.resolve(__dirname, 'src/icons'),
+                replacement: path.resolve(__dirname, 'src/components/icons'),
             },
             {
                 find: '@themes',
                 replacement: path.resolve(__dirname, 'themes.js'),
+            },
+            {
+                find: '@types',
+                replacement: path.resolve(__dirname, 'src/types'),
+            },
+            {
+                find: '@services',
+                replacement: path.resolve(__dirname, 'src/services'),
+            },
+            {
+                find: '@utils',
+                replacement: path.resolve(__dirname, 'src/utils'),
             },
         ],
     },
