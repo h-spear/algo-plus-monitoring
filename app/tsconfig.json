@@ -8,7 +8,8 @@
         "baseUrl": ".",
         "paths": {
             "@components/*": ["src/components/*"],
-            "@icons/*": ["src/icons/*"]
+            "@icons/*": ["src/icons/*"],
+            "@themes": ["themes.js"]
         }
     }
 }

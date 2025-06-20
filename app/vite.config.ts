@@ -18,6 +18,10 @@ export default defineConfig({
                 find: '@icons',
                 replacement: path.resolve(__dirname, 'src/icons'),
             },
+            {
+                find: '@themes',
+                replacement: path.resolve(__dirname, 'themes.js'),
+            },
         ],
     },
 });
