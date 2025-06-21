@@ -156,6 +156,12 @@ const Dashboard = () => {
                     <ApiStatusChart className='w-full pt-2 h-84 my-[0.5px]' />
                 </ItemWrapper>
             </div>
+
+            <div className='flex flex-wrap'>
+                <ItemWrapper className='flex-3/5'>
+                    <div className='w-full p-3 h-20'>Contributors</div>
+                </ItemWrapper>
+            </div>
         </div>
     );
 };

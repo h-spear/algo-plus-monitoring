@@ -21,7 +21,7 @@ const StatusWidget: React.FC<StatusWidgetProps> = ({
         >
             <div className='flex flex-col items-center h-30 pt-4'>
                 <h1
-                    className={`text-7xl px-6 py-1 mb-1 ${
+                    className={`text-7xl px-6 py-1 mb-1 text-gray-50 ${
                         passed ? 'bg-green-500' : 'bg-red-400'
                     }`}
                 >

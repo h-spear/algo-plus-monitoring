@@ -15,153 +15,7 @@ import { ApiUsageMetrics } from '@types/monitoring';
 import { FormControl, MenuItem, Select } from '@mui/material';
 import TimeDisplay from '@components/base/TimeDisplay/TimeDisplay';
 import { formatDate, getDateBefore } from '@utils/date';
-
-const dummyData: ApiUsageMetrics[] = [
-    {
-        time: '00:00',
-        jdoodleApiUsage: 651,
-        lambdaApiUsage: 263,
-        userCount: 288,
-    },
-    {
-        time: '01:00',
-        jdoodleApiUsage: 564,
-        lambdaApiUsage: 557,
-        userCount: 279,
-    },
-    {
-        time: '02:00',
-        jdoodleApiUsage: 261,
-        lambdaApiUsage: 214,
-        userCount: 283,
-    },
-    {
-        time: '03:00',
-        jdoodleApiUsage: 422,
-        lambdaApiUsage: 252,
-        userCount: 269,
-    },
-    {
-        time: '04:00',
-        jdoodleApiUsage: 539,
-        lambdaApiUsage: 722,
-        userCount: 294,
-    },
-    {
-        time: '05:00',
-        jdoodleApiUsage: 706,
-        lambdaApiUsage: 365,
-        userCount: 271,
-    },
-    {
-        time: '06:00',
-        jdoodleApiUsage: 786,
-        lambdaApiUsage: 228,
-        userCount: 263,
-    },
-    {
-        time: '07:00',
-        jdoodleApiUsage: 720,
-        lambdaApiUsage: 281,
-        userCount: 252,
-    },
-    {
-        time: '08:00',
-        jdoodleApiUsage: 774,
-        lambdaApiUsage: 660,
-        userCount: 205,
-    },
-    {
-        time: '09:00',
-        jdoodleApiUsage: 610,
-        lambdaApiUsage: 587,
-        userCount: 236,
-    },
-    {
-        time: '10:00',
-        jdoodleApiUsage: 324,
-        lambdaApiUsage: 730,
-        userCount: 274,
-    },
-    {
-        time: '11:00',
-        jdoodleApiUsage: 333,
-        lambdaApiUsage: 370,
-        userCount: 296,
-    },
-    {
-        time: '12:00',
-        jdoodleApiUsage: 586,
-        lambdaApiUsage: 251,
-        userCount: 235,
-    },
-    {
-        time: '13:00',
-        jdoodleApiUsage: 343,
-        lambdaApiUsage: 242,
-        userCount: 205,
-    },
-    {
-        time: '14:00',
-        jdoodleApiUsage: 266,
-        lambdaApiUsage: 238,
-        userCount: 271,
-    },
-    {
-        time: '15:00',
-        jdoodleApiUsage: 747,
-        lambdaApiUsage: 796,
-        userCount: 287,
-    },
-    {
-        time: '16:00',
-        jdoodleApiUsage: 412,
-        lambdaApiUsage: 771,
-        userCount: 248,
-    },
-    {
-        time: '17:00',
-        jdoodleApiUsage: 492,
-        lambdaApiUsage: 381,
-        userCount: 209,
-    },
-    {
-        time: '18:00',
-        jdoodleApiUsage: 360,
-        lambdaApiUsage: 788,
-        userCount: 208,
-    },
-    {
-        time: '19:00',
-        jdoodleApiUsage: 671,
-        lambdaApiUsage: 581,
-        userCount: 231,
-    },
-    {
-        time: '20:00',
-        jdoodleApiUsage: 589,
-        lambdaApiUsage: 257,
-        userCount: 254,
-    },
-    {
-        time: '21:00',
-        jdoodleApiUsage: 576,
-        lambdaApiUsage: 422,
-        userCount: 284,
-    },
-    {
-        time: '22:00',
-        jdoodleApiUsage: 450,
-        lambdaApiUsage: 757,
-        userCount: 267,
-    },
-    {
-        time: '23:00',
-        jdoodleApiUsage: 753,
-        lambdaApiUsage: 391,
-        userCount: 295,
-    },
-];
+import { fetchUsageLog } from '@services/firebase/usage-log';
 
 type PeriodFilterType = 'today' | 'weekly' | 'monthly' | 'daily';
 interface ApiUsageChartProps {
@@ -199,12 +53,13 @@ const ApiUsageChart: React.FC<ApiUsageChartProps> = ({ className }) => {
     const [period, setPeriod] = useState<string>('');
 
     const loadData = useCallback(() => {
-        setData(dummyData);
+        fetchUsageLog(new Date()).then(setData);
+        // error 처리 필요
     }, []);
 
     const handlePeriodFilter = useCallback(
         (periodFilter: PeriodFilterType) => {
-            setPeriodFilter(periodFilter); // 이 부분은 사실 불필요할 수 있습니다(아래 참고)
+            setPeriodFilter(periodFilter);
             const now = new Date();
             if (periodFilter === 'today') {
                 setPeriod(formatDate(now));
