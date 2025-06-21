@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ItemWrapper from '@components/base/ItemWrapper/ItemWrapper';
 import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
 import GradeRoundedIcon from '@mui/icons-material/GradeRounded';
@@ -7,15 +7,47 @@ import ChromeIcon from '@icons/ChromeIcon/ChromeIcon';
 import TextWidgetContent from '@components/base/TextWidgetContent/TextWidgetContent';
 import RocketIcon from '@icons/RocketIcon/RocketIcon';
 import UsageDonutWidget from '@components/base/UsageDonutWidget/UsageDonutWidget';
-import UsageInfo from '@components/base/UsageInfo/UserInfo';
+import UsageInfo from '@components/base/UsageInfo/UsageInfo';
 import StatusWidget from '@components/base/StatusWidget/StatusWidget';
 import ApiUsageChart from '@components/composites/ApiUsageChart/ApiUsageChart';
 import { colorAlgoplusBlue, colorAlgoplusOrange } from '@themes';
 import ApiStatusChart from '@components/composites/ApiStatusChart/ApiStatusChart';
 import TimeDisplay from '@components/base/TimeDisplay/TimeDisplay';
 import { formatDateTime } from '@utils/date';
+import type {
+    AwsLambdaMonitoringInfo,
+    ChromeWebStoreMonitoringInfo,
+    GitHubMonitoringInfo,
+    JDoodleApiMonitoringInfo,
+} from '@types/api';
+import { fetchAlgoPlusInformation } from '@/services/firebase';
 
 const Dashboard = () => {
+    const [githubInfo, setGithubInfo] = useState<GitHubMonitoringInfo | null>(
+        {}
+    );
+    const [awsLambdaInfo, setAwsLambdaInfo] =
+        useState<AwsLambdaMonitoringInfo | null>({});
+    const [jdoodleApiInfo, setJDoodleApiInfo] =
+        useState<JDoodleApiMonitoringInfo | null>({});
+    const [chromeWebStoreInfo, setChromeWebStoreInfo] =
+        useState<ChromeWebStoreMonitoringInfo | null>({});
+
+    useEffect(() => {
+        fetchAlgoPlusInformation(
+            (data) => {
+                setGithubInfo(data.github);
+                setAwsLambdaInfo(data.awsLambda);
+                setJDoodleApiInfo(data.jdoodleApi);
+                setChromeWebStoreInfo(data.chromeWebStore);
+                console.log(data);
+            },
+            (err) => {
+                console.error(err);
+            }
+        );
+    }, []);
+
     return (
         <div className='bg-white max-w-340 min-w-90 w-full m-6 py-4 px-6'>
             <div className='flex justify-between items-start'>
@@ -32,7 +64,7 @@ const Dashboard = () => {
                     <TextWidgetContent
                         icon={<PersonRoundedIcon fontSize='inherit' />}
                         iconClass='mb-1'
-                        text='212명'
+                        text={chromeWebStoreInfo?.users}
                         textClass='text-3xl'
                         unit='사용자'
                     />
@@ -41,7 +73,7 @@ const Dashboard = () => {
                     <TextWidgetContent
                         icon={<GradeRoundedIcon fontSize='inherit' />}
                         iconClass='text-yellow-500'
-                        text='5.0'
+                        text={chromeWebStoreInfo?.rating}
                         textClass='text-4xl'
                         unit='평점'
                     />
@@ -50,7 +82,7 @@ const Dashboard = () => {
                     <TextWidgetContent
                         icon={<GitHubIcon fontSize='inherit' />}
                         iconClass='mb-2'
-                        text='1.0.9'
+                        text={githubInfo?.version}
                         textClass='text-3xl'
                         unit='버전'
                     />
@@ -59,7 +91,7 @@ const Dashboard = () => {
                     <TextWidgetContent
                         icon={<ChromeIcon size={28} />}
                         iconClass='mr-1.5'
-                        text='1.0.9'
+                        text={chromeWebStoreInfo?.version}
                         textClass='text-3xl'
                         unit='버전'
                     />
@@ -68,7 +100,11 @@ const Dashboard = () => {
                     <TextWidgetContent
                         icon={<RocketIcon fontSize={28} />}
                         iconClass='mb-1'
-                        text='5명'
+                        text={
+                            githubInfo?.contributorsCount
+                                ? `${githubInfo.contributorsCount}명`
+                                : null
+                        }
                         textClass='text-3xl'
                         unit='기여자'
                     />
@@ -78,16 +114,33 @@ const Dashboard = () => {
                 <ItemWrapper className='flex-1/5'>
                     <UsageDonutWidget
                         title='JDoodle API 사용량'
-                        value={212}
+                        value={jdoodleApiInfo?.creditSpentPerDay}
                         min={0}
-                        max={2050}
+                        max={jdoodleApiInfo?.maxCreditPerDay}
                         className='h-80 min-w-60'
                         color={colorAlgoplusOrange}
                         description={
                             <UsageInfo
-                                percent={((212 / 2025) * 100).toFixed(1)}
-                                caption1='2,025회 / 1일'
-                                caption2='총 사용 가능한 크레딧'
+                                text={
+                                    jdoodleApiInfo?.creditSpentPerDay &&
+                                    jdoodleApiInfo?.maxCreditPerDay
+                                        ? `${(
+                                              (jdoodleApiInfo.creditSpentPerDay /
+                                                  jdoodleApiInfo.maxCreditPerDay) *
+                                              100
+                                          ).toFixed(1)}%`
+                                        : ''
+                                }
+                                caption1={
+                                    jdoodleApiInfo?.maxCreditPerDay
+                                        ? `${jdoodleApiInfo.maxCreditPerDay.toLocaleString()}회 / 1일`
+                                        : ''
+                                }
+                                caption2={
+                                    jdoodleApiInfo?.maxCreditPerDay
+                                        ? '총 사용 가능한 크레딧'
+                                        : null
+                                }
                             />
                         }
                     />

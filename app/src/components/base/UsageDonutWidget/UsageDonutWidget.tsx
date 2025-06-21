@@ -1,10 +1,11 @@
 import React from 'react';
 import { Gauge, gaugeClasses } from '@mui/x-charts/Gauge';
 import { colorDark } from '@themes';
+import { CircularProgress } from '@mui/material';
 
 interface UsageDonutWidgetProps {
-    title: string;
-    value: number;
+    title?: string;
+    value?: number;
     min?: number;
     max?: number;
     color?: string;
@@ -16,8 +17,8 @@ interface UsageDonutWidgetProps {
 }
 
 const UsageDonutWidget: React.FC<UsageDonutWidgetProps> = ({
-    title = '',
-    value = 126,
+    title,
+    value,
     min = 0,
     max = 100,
     color = colorDark,

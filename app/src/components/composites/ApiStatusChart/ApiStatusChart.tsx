@@ -12,10 +12,7 @@ import {
     colorLightGreen,
 } from '@themes';
 import { ApiResponseTimeMetrics } from '@types/monitoring';
-import { FormControl, MenuItem, Select } from '@mui/material';
-import TimeDisplay from '@components/base/TimeDisplay/TimeDisplay';
-import { getDateBefore } from '@utils/date';
-import { formatMonthDay } from '../../../utils/date';
+import { formatMonthDay } from '@utils/date';
 
 const dummyData: ApiResponseTimeMetrics[] = [
     {

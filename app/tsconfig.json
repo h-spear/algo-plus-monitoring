@@ -7,15 +7,17 @@
     "compilerOptions": {
         "baseUrl": ".",
         "paths": {
+            "@": ["src"],
             "@/*": ["src/*"],
             "@components/*": ["src/components/*"],
             "@icons/*": ["src/components/icons/*"],
             "@types/*": ["src/components/types/*"],
             "@services/*": ["src/components/services/*"],
+            "@apis/*": ["src/components/services/apis/*"],
             "@utils/*": ["src/components/utils/*"],
             "@themes": ["themes.ts"]
         },
         "moduleResolution": "node"
     },
-    "include": ["src/**/*", "src"]
+    "include": ["src/**/*", "src/*", "src"]
 }

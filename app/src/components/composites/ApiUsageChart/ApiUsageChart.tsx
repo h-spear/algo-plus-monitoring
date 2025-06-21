@@ -15,7 +15,7 @@ import { ApiUsageMetrics } from '@types/monitoring';
 import { FormControl, MenuItem, Select } from '@mui/material';
 import TimeDisplay from '@components/base/TimeDisplay/TimeDisplay';
 import { formatDate, getDateBefore } from '@utils/date';
-import { fetchUsageLog } from '@services/firebase/usage-log';
+import { fetchUsageLog } from '@services/firebase';
 
 type PeriodFilterType = 'today' | 'weekly' | 'monthly' | 'daily';
 interface ApiUsageChartProps {
@@ -52,40 +52,40 @@ const ApiUsageChart: React.FC<ApiUsageChartProps> = ({ className }) => {
     const [periodFilter, setPeriodFilter] = useState<PeriodFilterType>('today');
     const [period, setPeriod] = useState<string>('');
 
-    const loadData = useCallback(() => {
-        fetchUsageLog(new Date()).then(setData);
-        // error 처리 필요
-    }, []);
+    // const loadData = useCallback(() => {
+    //     fetchUsageLog(new Date()).then(setData);
+    //     // error 처리 필요
+    // }, []);
 
-    const handlePeriodFilter = useCallback(
-        (periodFilter: PeriodFilterType) => {
-            setPeriodFilter(periodFilter);
-            const now = new Date();
-            if (periodFilter === 'today') {
-                setPeriod(formatDate(now));
-            } else if (periodFilter === 'weekly') {
-                const dateBefore = getDateBefore(now, 7);
-                setPeriod(`${dateBefore} ~ ${formatDate(now)}`);
-            } else if (periodFilter === 'monthly') {
-                const dateBefore = getDateBefore(now, 30);
-                setPeriod(`${dateBefore} ~ ${formatDate(now)}`);
-            }
-            loadData();
-        },
-        [loadData]
-    );
+    // const handlePeriodFilter = useCallback(
+    //     (periodFilter: PeriodFilterType) => {
+    //         setPeriodFilter(periodFilter);
+    //         const now = new Date();
+    //         if (periodFilter === 'today') {
+    //             setPeriod(formatDate(now));
+    //         } else if (periodFilter === 'weekly') {
+    //             const dateBefore = getDateBefore(now, 7);
+    //             setPeriod(`${dateBefore} ~ ${formatDate(now)}`);
+    //         } else if (periodFilter === 'monthly') {
+    //             const dateBefore = getDateBefore(now, 30);
+    //             setPeriod(`${dateBefore} ~ ${formatDate(now)}`);
+    //         }
+    //         loadData();
+    //     },
+    //     [loadData]
+    // );
 
-    useEffect(() => {
-        setPeriodFilter('today');
-    }, []);
+    // useEffect(() => {
+    //     setPeriodFilter('today');
+    // }, []);
 
-    useEffect(() => {
-        handlePeriodFilter(periodFilter);
-    }, [periodFilter, handlePeriodFilter]);
+    // useEffect(() => {
+    //     handlePeriodFilter(periodFilter);
+    // }, [periodFilter, handlePeriodFilter]);
 
-    useEffect(() => {
-        setSeries(getSeriesFromData(data));
-    }, [data]);
+    // useEffect(() => {
+    //     setSeries(getSeriesFromData(data));
+    // }, [data]);
 
     return (
         <div className={`${className}`}>
