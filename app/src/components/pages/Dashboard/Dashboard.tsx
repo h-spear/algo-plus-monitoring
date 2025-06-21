@@ -20,7 +20,8 @@ import type {
     GitHubMonitoringInfo,
     JDoodleApiMonitoringInfo,
 } from '@types/api';
-import { fetchAlgoPlusInformation } from '@/services/firebase';
+import { fetchAlgoPlusInformation } from '@services/firebase';
+import { updateAlgoPlusInformation } from '@services/apis/lambda';
 
 const Dashboard = () => {
     const [githubInfo, setGithubInfo] = useState<GitHubMonitoringInfo | null>(
@@ -34,7 +35,7 @@ const Dashboard = () => {
         useState<ChromeWebStoreMonitoringInfo | null>({});
     const [lastUpdatedTime, setLastUpdatedTime] = useState<Date | null>(null);
 
-    useEffect(() => {
+    const loadData = () => {
         fetchAlgoPlusInformation(
             (data) => {
                 setGithubInfo(data.github);
@@ -47,6 +48,30 @@ const Dashboard = () => {
                 console.error(err);
             }
         );
+    };
+
+    const flushData = () => {
+        setGithubInfo({});
+        setAwsLambdaInfo({});
+        setJDoodleApiInfo({});
+        setChromeWebStoreInfo({});
+        setLastUpdatedTime(null);
+    };
+
+    const updateData = () => {
+        flushData();
+        updateAlgoPlusInformation(
+            (data) => {
+                loadData();
+            },
+            (err) => {
+                console.log(err);
+            }
+        );
+    };
+
+    useEffect(() => {
+        loadData();
     }, []);
 
     return (
@@ -56,7 +81,10 @@ const Dashboard = () => {
                 <div className='flex items-center gap-2'>
                     {lastUpdatedTime ? (
                         <>
-                            <button className='text-xs text-blue-900 border-blue-300 border-1 bg-blue-100 rounded-xl px-2 h-4 flex items-center justify-center'>
+                            <button
+                                className='text-xs text-blue-900 border-blue-300 border-1 bg-blue-100 rounded-xl px-2 h-4 flex items-center justify-center'
+                                onClick={() => updateData()}
+                            >
                                 데이터 갱신
                             </button>
                             <TimeDisplay

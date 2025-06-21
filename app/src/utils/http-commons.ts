@@ -7,14 +7,12 @@ const api: AxiosInstance = axios.create({
     },
 });
 
-export type ApiCallback<T> = {
-    success?: (data: T) => void;
-    error?: (error: unknown) => void;
-};
+export type ApiCallback<T> = {};
 
 export const get = async <T>(
     url: string,
-    { success, error }: ApiCallback<T> = {},
+    success?: (data: T) => void,
+    error?: (error: unknown) => void,
     config?: AxiosRequestConfig
 ): Promise<void> => {
     try {
@@ -28,38 +26,12 @@ export const get = async <T>(
 export const post = async <T, R>(
     url: string,
     data: T,
-    { success, error }: ApiCallback<R> = {},
+    success?: (data: R) => void,
+    error?: (error: unknown) => void,
     config?: AxiosRequestConfig
 ): Promise<void> => {
     try {
         const response = await api.post<R>(url, data, config);
-        success?.(response.data);
-    } catch (err) {
-        error?.(err);
-    }
-};
-
-export const put = async <T, R>(
-    url: string,
-    data: T,
-    { success, error }: ApiCallback<R> = {},
-    config?: AxiosRequestConfig
-): Promise<void> => {
-    try {
-        const response = await api.put<R>(url, data, config);
-        success?.(response.data);
-    } catch (err) {
-        error?.(err);
-    }
-};
-
-export const del = async <T>(
-    url: string,
-    { success, error }: ApiCallback<T> = {},
-    config?: AxiosRequestConfig
-): Promise<void> => {
-    try {
-        const response = await api.delete<T>(url, config);
         success?.(response.data);
     } catch (err) {
         error?.(err);
