@@ -43,6 +43,7 @@ const Dashboard = () => {
                 setJDoodleApiInfo(data.jdoodleApi);
                 setChromeWebStoreInfo(data.chromeWebStore);
                 setLastUpdatedTime(new Date(data.timestamp.seconds * 1000));
+                console.log(data);
             },
             (err) => {
                 console.error(err);
@@ -185,16 +186,33 @@ const Dashboard = () => {
                 <ItemWrapper className='flex-1/5'>
                     <UsageDonutWidget
                         title='AWS Lambda 사용량'
-                        value={300}
+                        value={awsLambdaInfo?.totalInvocations}
                         min={0}
-                        max={1000000}
+                        max={awsLambdaInfo?.freeTierLimit}
                         className='h-80 min-w-60'
                         color={colorAlgoplusBlue}
                         description={
                             <UsageInfo
-                                percent={((212 / 2025) * 100).toFixed(1)}
-                                caption1='1,000,000회 / 1개월'
-                                caption2='무료 할당량'
+                                text={
+                                    awsLambdaInfo?.totalInvocations &&
+                                    awsLambdaInfo?.freeTierLimit
+                                        ? `${(
+                                              (awsLambdaInfo.totalInvocations /
+                                                  awsLambdaInfo.freeTierLimit) *
+                                              100
+                                          ).toFixed(1)}%`
+                                        : ''
+                                }
+                                caption1={
+                                    awsLambdaInfo?.freeTierLimit
+                                        ? `${awsLambdaInfo.freeTierLimit.toLocaleString()}회 / 1개월`
+                                        : ''
+                                }
+                                caption2={
+                                    awsLambdaInfo?.freeTierLimit
+                                        ? '무료 할당량'
+                                        : null
+                                }
                             />
                         }
                     />

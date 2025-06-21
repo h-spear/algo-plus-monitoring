@@ -33,8 +33,16 @@ export type GitHubInfo = {
     branchesCount: number;
 };
 
+export type AwsLambdaFunctionInfo = {
+    name: string;
+    invocationCount: number;
+};
+
 export type AwsLambdaInfo = {
-    id: string;
+    freeTierLimit: number;
+    functions: AwsLambdaFunctionInfo[];
+    remainingFree: number;
+    totalInvocations: number;
 };
 
 export type AlgoPlusInformation = {
