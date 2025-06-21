@@ -32,6 +32,7 @@ const Dashboard = () => {
         useState<JDoodleApiMonitoringInfo | null>({});
     const [chromeWebStoreInfo, setChromeWebStoreInfo] =
         useState<ChromeWebStoreMonitoringInfo | null>({});
+    const [lastUpdatedTime, setLastUpdatedTime] = useState<Date | null>(null);
 
     useEffect(() => {
         fetchAlgoPlusInformation(
@@ -40,7 +41,7 @@ const Dashboard = () => {
                 setAwsLambdaInfo(data.awsLambda);
                 setJDoodleApiInfo(data.jdoodleApi);
                 setChromeWebStoreInfo(data.chromeWebStore);
-                console.log(data);
+                setLastUpdatedTime(new Date(data.timestamp.seconds * 1000));
             },
             (err) => {
                 console.error(err);
@@ -53,10 +54,18 @@ const Dashboard = () => {
             <div className='flex justify-between items-start'>
                 <h1 className='text-3xl font-bold mb-4'>Dashboard</h1>
                 <div className='flex items-center gap-2'>
-                    <button className='text-xs text-blue-900 border-blue-300 border-1 bg-blue-100 rounded-xl px-2 h-4 flex items-center justify-center'>
-                        데이터 갱신
-                    </button>
-                    <TimeDisplay text={formatDateTime(new Date())} />
+                    {lastUpdatedTime ? (
+                        <>
+                            <button className='text-xs text-blue-900 border-blue-300 border-1 bg-blue-100 rounded-xl px-2 h-4 flex items-center justify-center'>
+                                데이터 갱신
+                            </button>
+                            <TimeDisplay
+                                text={formatDateTime(lastUpdatedTime)}
+                            />
+                        </>
+                    ) : (
+                        <></>
+                    )}
                 </div>
             </div>
             <div className='flex flex-wrap'>
