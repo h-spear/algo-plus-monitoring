@@ -12,7 +12,7 @@ import {
     colorLightGreen,
 } from '@themes';
 import { ApiUsageMetrics } from '@types/monitoring';
-import { FormControl, MenuItem, Select } from '@mui/material';
+import { CircularProgress, FormControl, MenuItem, Select } from '@mui/material';
 import TimeDisplay from '@components/base/TimeDisplay/TimeDisplay';
 import { formatDate, getDateBefore } from '@utils/date';
 import {
@@ -24,6 +24,7 @@ type PeriodFilterType = 'today' | 'weekly' | 'monthly' | 'daily';
 interface ApiUsageChartProps {
     className?: string;
     data: ApiUsageMetrics[];
+    loading: boolean;
 }
 
 const getSeriesFromData = (data: ApiUsageMetrics[]): AllSeriesType[] => [
@@ -50,7 +51,10 @@ const getSeriesFromData = (data: ApiUsageMetrics[]): AllSeriesType[] => [
     // },
 ];
 
-const ApiUsageChart: React.FC<ApiUsageChartProps> = ({ className }) => {
+const ApiUsageChart: React.FC<ApiUsageChartProps> = ({
+    className,
+    loading,
+}) => {
     const [data, setData] = useState<ApiUsageMetrics[]>([]);
     const [series, setSeries] = useState<AllSeriesType[]>([]);
     const [periodFilter, setPeriodFilter] = useState<PeriodFilterType>('today');
@@ -95,16 +99,28 @@ const ApiUsageChart: React.FC<ApiUsageChartProps> = ({ className }) => {
     }, [periodFilter, loadData]);
 
     useEffect(() => {
+        if (loading == false) {
+            loadData();
+        }
+    }, [loading, loadData]);
+
+    useEffect(() => {
         setSeries(getSeriesFromData(data));
     }, [data]);
 
     return (
         <div className={`${className}`}>
             <div className='flex justify-between items-center px-3 h-10 pt-1'>
-                <TimeDisplay icon='calendar' text={period} className='h-full' />
+                <TimeDisplay
+                    icon='calendar'
+                    text={loading ? '' : period}
+                    className='h-full'
+                />
                 <h1 className='text-xl'></h1>
                 <FormControl variant='standard' sx={{ minWidth: 90 }}>
                     <Select
+                        disabled={loading}
+                        className={`${loading ? 'Mui-disabled' : ''}`}
                         value={periodFilter}
                         onChange={(value) =>
                             setPeriodFilter(value.target.value)
@@ -126,63 +142,73 @@ const ApiUsageChart: React.FC<ApiUsageChartProps> = ({ className }) => {
                     </Select>
                 </FormControl>
             </div>
-            <ChartContainer
-                series={series}
-                height={285}
-                xAxis={[
-                    {
-                        id: 'date',
-                        data: data.map((x) => x.time),
-                        scaleType: 'band',
-                    },
-                ]}
-                yAxis={[
-                    {
-                        id: 'callCount',
-                        scaleType: 'linear',
-                        position: 'left',
-                        width: 70,
-                        min: 0,
-                        max: 500,
-                        // valueFormatter: (value) => {
-                        //     if (value >= 1000) {
-                        //         return `${(value / 1000).toFixed(1)}K`;
-                        //     }
-                        //     return `${value}`;
-                        // },
-                    },
-                    {
-                        id: 'user',
-                        scaleType: 'linear',
-                        position: 'right',
-                        valueFormatter: (value) => `${value}`,
-                        width: 50,
-                        max: 300,
-                    },
-                ]}
+
+            <div
+                className={`flex justify-center items-center h-60 ${
+                    loading ? '' : 'hidden'
+                }`}
             >
-                <ChartsAxisHighlight x='line' />
-                <BarPlot />
-                <LinePlot />
-                <LineHighlightPlot />
-                <ChartsXAxis
-                    axisId='date'
-                    tickLabelStyle={{
-                        fontSize: 10,
-                    }}
-                />
-                <ChartsYAxis
-                    label='호출 횟수(회)'
-                    axisId='callCount'
-                    tickLabelStyle={{ fontSize: 10 }}
-                />
-                <ChartsYAxis
-                    label='사용자(명)'
-                    axisId='user'
-                    tickLabelStyle={{ fontSize: 10 }}
-                />
-                <ChartsTooltip />
-            </ChartContainer>
+                <CircularProgress color='primary' size={100} />
+            </div>
+            <div className={`${loading ? 'hidden' : ''}`}>
+                <ChartContainer
+                    series={series}
+                    height={285}
+                    xAxis={[
+                        {
+                            id: 'date',
+                            data: data.map((x) => x.time),
+                            scaleType: 'band',
+                        },
+                    ]}
+                    yAxis={[
+                        {
+                            id: 'callCount',
+                            scaleType: 'linear',
+                            position: 'left',
+                            width: 70,
+                            min: 0,
+                            max: 500,
+                            // valueFormatter: (value) => {
+                            //     if (value >= 1000) {
+                            //         return `${(value / 1000).toFixed(1)}K`;
+                            //     }
+                            //     return `${value}`;
+                            // },
+                        },
+                        {
+                            id: 'user',
+                            scaleType: 'linear',
+                            position: 'right',
+                            valueFormatter: (value) => `${value}`,
+                            width: 50,
+                            max: 300,
+                        },
+                    ]}
+                >
+                    <ChartsAxisHighlight x='line' />
+                    <BarPlot />
+                    <LinePlot />
+                    <LineHighlightPlot />
+                    <ChartsXAxis
+                        axisId='date'
+                        tickLabelStyle={{
+                            fontSize: 10,
+                        }}
+                    />
+                    <ChartsYAxis
+                        label='호출 횟수(회)'
+                        axisId='callCount'
+                        tickLabelStyle={{ fontSize: 10 }}
+                    />
+                    <ChartsYAxis
+                        label='사용자(명)'
+                        axisId='user'
+                        tickLabelStyle={{ fontSize: 10 }}
+                    />
+                    <ChartsTooltip />
+                </ChartContainer>
+            </div>
         </div>
     );
 };

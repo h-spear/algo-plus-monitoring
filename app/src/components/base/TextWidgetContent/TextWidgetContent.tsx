@@ -24,11 +24,7 @@ const TextWidgetContent: React.FC<TextWidgetContentProps> = ({
                     {text ? (
                         <>{text}</>
                     ) : (
-                        <CircularProgress
-                            color='primary'
-                            size={36}
-                            className='mx-3'
-                        />
+                        <CircularProgress color='primary' size={36} />
                     )}
                 </h3>
                 <span className='text-sm ml-1 h-full text-gray-400 pb-0.5'>

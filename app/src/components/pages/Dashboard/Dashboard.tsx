@@ -45,6 +45,7 @@ const Dashboard = () => {
     const [apiUsageMetrics, setApiUsageMetrics] = useState<ApiUsageMetrics[]>(
         []
     );
+    const [loading, setLoading] = useState<boolean>(true);
 
     const loadData = () => {
         fetchAlgoPlusInformation(
@@ -54,6 +55,7 @@ const Dashboard = () => {
                 setJDoodleApiInfo(data.jdoodleApi);
                 setChromeWebStoreInfo(data.chromeWebStore);
                 setLastUpdatedTime(new Date(data.timestamp.seconds * 1000));
+                setLoading(false);
                 // console.log(data);
             },
             (err) => {
@@ -63,6 +65,7 @@ const Dashboard = () => {
     };
 
     const flushData = () => {
+        setLoading(true);
         setGithubInfo({});
         setAwsLambdaInfo({});
         setJDoodleApiInfo({});
@@ -96,6 +99,7 @@ const Dashboard = () => {
                     {lastUpdatedTime ? (
                         <>
                             <button
+                                disabled={loading}
                                 className='text-xs text-blue-900 border-blue-300 border-1 bg-blue-100 rounded-xl px-2 h-4 flex items-center justify-center'
                                 onClick={() => updateData()}
                             >
@@ -164,6 +168,7 @@ const Dashboard = () => {
             <div className='flex flex-wrap'>
                 <ItemWrapper className='flex-1/5'>
                     <UsageDonutWidget
+                        loading={loading}
                         title={
                             <div className='flex flex-col items-center'>
                                 <h3 className='text-xl font-bold'>
@@ -207,6 +212,7 @@ const Dashboard = () => {
                 </ItemWrapper>
                 <ItemWrapper className='flex-1/5'>
                     <UsageDonutWidget
+                        loading={loading}
                         title={
                             <div className='flex flex-col items-center'>
                                 <h3 className='text-xl font-bold'>
@@ -252,6 +258,7 @@ const Dashboard = () => {
                     <ApiUsageChart
                         className='w-full pt-2 h-80'
                         data={apiUsageMetrics}
+                        loading={loading}
                     />
                 </ItemWrapper>
             </div>
