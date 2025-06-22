@@ -7,8 +7,6 @@ const api: AxiosInstance = axios.create({
     },
 });
 
-export type ApiCallback<T> = {};
-
 export const get = async <T>(
     url: string,
     success?: (data: T) => void,

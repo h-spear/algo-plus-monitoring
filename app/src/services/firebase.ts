@@ -2,21 +2,27 @@ import {
     collection,
     doc,
     documentId,
+    endAt,
+    Firestore,
     getDoc,
     getDocs,
+    orderBy,
     query,
+    QueryConstraint,
     setDoc,
+    startAt,
     where,
 } from 'firebase/firestore';
-import type { ApiUsageLogDto } from '@types/firebase';
-import type { ApiUsageMetrics } from '@types/monitoring';
 import { fireStore } from '../../firebase';
-import type { AlgoPlusInformation } from '../types/api';
-import { convertKeysToCamel } from '../utils/naming';
+import type { AlgoPlusInformation } from '@types/api';
+import { convertKeysToCamel } from '@utils/naming';
+import type { ApiUsageMetrics } from '../types/monitoring';
 
 const COLLECTION_ALGOPLUS_INFORMATION = 'algoplus-information';
+const COLLECTION_API_USAGE = 'api-usage-metrics';
+const COLLECTION_API_DAILY_USAGE = 'api-daily-usage-metrics';
 
-const getData = async (
+const fetchDocumentById = async (
     collectionName: string,
     docId: string,
     success: (data: Record<string, unknown>) => void,
@@ -38,7 +44,7 @@ export const fetchAlgoPlusInformation = async (
     success: (data: AlgoPlusInformation) => void,
     error: (err: unknown) => void
 ): Promise<void> => {
-    getData(
+    fetchDocumentById(
         COLLECTION_ALGOPLUS_INFORMATION,
         'current',
         (data) => success(convertKeysToCamel<AlgoPlusInformation>(data)),
@@ -46,70 +52,126 @@ export const fetchAlgoPlusInformation = async (
     );
 };
 
-// async function setData(collectionName: string, docId: string, data: object) {
-//     const docRef = doc(fireStore, collectionName, docId);
-//     await setDoc(docRef, data, { merge: true });
-// }
+const fetchDocsBetweenDates = async (
+    collectionName: string,
+    startDate: Date,
+    endDate: Date,
+    suffix?: string
+) => {
+    const startId = `${startDate.toISOString().split('T')[0]}${
+        suffix ? suffix : ''
+    }`;
+    endDate.setDate(endDate.getDate() + 1);
+    const endId = `${endDate.toISOString().split('T')[0]}${
+        suffix ? suffix : ''
+    }`;
 
-// const convertDateToUsageLogCollectionKey = (date: Date): string => {
-//     const year = date.getFullYear();
-//     const month = String(date.getMonth() + 1).padStart(2, '0');
-//     const day = String(date.getDate()).padStart(2, '0');
-//     const hours = String(date.getHours()).padStart(2, '0');
-//     return `${year}-${month}-${day}_${hours}`;
-// };
+    const q = query(
+        collection(fireStore, collectionName),
+        orderBy('__name__'),
+        startAt(startId),
+        endAt(endId)
+    );
 
-// const generateQueryKeys = (startDate: Date, endDate: Date): string[] => {
-//     const keys: string[] = [];
-//     const current = new Date(startDate);
-//     current.setHours(0, 0, 0, 0);
-//     const end = new Date(endDate);
-//     end.setHours(23, 59, 59, 999);
+    return await getDocs(q);
+};
 
-//     while (current <= end) {
-//         for (let hour = 0; hour < 24; hour++) {
-//             const date = new Date(current);
-//             date.setHours(hour);
-//             keys.push(convertDateToUsageLogCollectionKey(date));
-//         }
-//         current.setDate(current.getDate() + 1);
-//     }
-//     return keys;
-// };
+const fetchUsageDocsDate = async (collectionName: string, date: Date) => {
+    return fetchDocsBetweenDates(collectionName, date, date, '_09');
+};
 
-// const getMultipleData = async (docIds: string[]) => {
-//     if (docIds.length === 0) return [];
+export const fetchHourlyUsageMetrics = async (
+    date: Date,
+    success: (data: ApiUsageMetrics[]) => void,
+    error: (err: unknown) => void
+): Promise<void> => {
+    try {
+        const querySnapshot = await fetchUsageDocsDate(
+            COLLECTION_API_USAGE,
+            date
+        );
+        const results: ApiUsageMetrics[] = new Array(24).fill(null);
+        querySnapshot.forEach((doc) => {
+            const id = doc.id;
+            const data = doc.data();
+            const index = parseInt(id.split('_')[1]);
+            const apiUsageMetrics: ApiUsageMetrics = {
+                time: `${id.split('_')[1]}:00`,
+                jdoodleApiUsage: data['jdoodle_api_usage'],
+                lambdaApiUsage: data['lambda_api_usage'],
+                userCount: data['user_count'],
+            };
+            if (results[index - 9] == null) {
+                results[index - 9] = apiUsageMetrics;
+            }
+        });
 
-//     const q = query(
-//         collection(fireStore, COLLECTION_API_USAGE_LOG),
-//         where(documentId(), 'in', docIds)
-//     );
+        for (let i = 0; i < 24; ++i) {
+            if (results[i] == null) {
+                results[i] = {
+                    time: `${((i + 9) % 24).toString().padStart(2, '0')}:00`,
+                    jdoodleApiUsage: 0,
+                    lambdaApiUsage: 0,
+                    userCount: 0,
+                };
+            }
+        }
+        success(results);
+    } catch (err) {
+        error(err);
+    }
+};
 
-//     const querySnapshot = await getDocs(q);
-//     return querySnapshot.docs.map((doc) => ({
-//         id: doc.id,
-//         data: doc.data() as ApiUsageLogDto,
-//     }));
-// };
+export const fetchDailyUsageMetrics = async (
+    startDate: Date,
+    endDate: Date,
+    success: (data: ApiUsageMetrics[]) => void,
+    error: (err: unknown) => void
+): Promise<void> => {
+    try {
+        const querySnapshot = await fetchDocsBetweenDates(
+            COLLECTION_API_DAILY_USAGE,
+            startDate,
+            endDate
+        );
+        const map = new Map();
+        querySnapshot.forEach((doc) => {
+            const id = doc.id;
+            const data = doc.data();
+            const splited = id.split('_')[0].split('-');
+            const formattedTime = splited[1] + '.' + splited[2];
+            map.set(id.split('_')[0], {
+                time: formattedTime,
+                jdoodleApiUsage: data['jdoodle_api_usage'],
+                lambdaApiUsage: data['lambda_api_usage'],
+                userCount: data['user_count'],
+            });
+        });
 
-// const queryUsageLog = async (startDate: Date, endDate: Date) => {
-//     try {
-//         const keys = generateQueryKeys(startDate, endDate);
-
-//         const chunkSize = 10;
-//         const chunks: string[][] = [];
-//         for (let i = 0; i < keys.length; i += chunkSize) {
-//             chunks.push(keys.slice(i, i + chunkSize));
-//         }
-
-//         const results = [];
-//         for (const chunk of chunks) {
-//             const data = await getMultipleData(chunk);
-//             results.push(...data);
-//         }
-//         return results.map((item) => item.data !== undefined);
-//     } catch (error) {
-//         console.error('문서 조회 실패:', error);
-//         return [];
-//     }
-// };
+        const results: ApiUsageMetrics[] = [];
+        for (
+            let d = new Date(startDate);
+            d < endDate;
+            d.setDate(d.getDate() + 1)
+        ) {
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            const key = `${year}-${month}-${day}`;
+            const splited = key.split('-');
+            const formattedTime = splited[1] + '.' + splited[2];
+            const value = map.has(key)
+                ? map.get(key)
+                : {
+                      time: formattedTime,
+                      jdoodleApiUsage: 0,
+                      lambdaApiUsage: 0,
+                      userCount: 0,
+                  };
+            results.push(value);
+        }
+        success(results);
+    } catch (err) {
+        error(err);
+    }
+};

@@ -1,10 +1,9 @@
 import React from 'react';
 import { Gauge, gaugeClasses } from '@mui/x-charts/Gauge';
 import { colorDark } from '@themes';
-import { CircularProgress } from '@mui/material';
 
 interface UsageDonutWidgetProps {
-    title?: string;
+    title?: React.ReactNode;
     value?: number;
     min?: number;
     max?: number;
@@ -32,7 +31,7 @@ const UsageDonutWidget: React.FC<UsageDonutWidgetProps> = ({
         <div
             className={`flex flex-col justify-between items-center py-4 ${className}`}
         >
-            <h3 className='text-xl font-bold'>{title}</h3>
+            {title}
             <Gauge
                 width={width}
                 height={height}

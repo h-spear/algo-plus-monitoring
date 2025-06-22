@@ -15,11 +15,15 @@ import { ApiUsageMetrics } from '@types/monitoring';
 import { FormControl, MenuItem, Select } from '@mui/material';
 import TimeDisplay from '@components/base/TimeDisplay/TimeDisplay';
 import { formatDate, getDateBefore } from '@utils/date';
-import { fetchUsageLog } from '@services/firebase';
+import {
+    fetchHourlyUsageMetrics,
+    fetchDailyUsageMetrics,
+} from '@services/firebase';
 
 type PeriodFilterType = 'today' | 'weekly' | 'monthly' | 'daily';
 interface ApiUsageChartProps {
     className?: string;
+    data: ApiUsageMetrics[];
 }
 
 const getSeriesFromData = (data: ApiUsageMetrics[]): AllSeriesType[] => [
@@ -33,17 +37,17 @@ const getSeriesFromData = (data: ApiUsageMetrics[]): AllSeriesType[] => [
     {
         type: 'line',
         data: data.map((item) => item.jdoodleApiUsage),
-        label: 'JDoodle API 호출 횟수',
+        label: 'Algo Plus 컴파일 실행 횟수',
         yAxisId: 'callCount',
         color: colorAlgoplusOrange,
     },
-    {
-        type: 'line',
-        data: data.map((item) => item.lambdaApiUsage),
-        label: 'AWS Lambda API 호출 횟수',
-        yAxisId: 'callCount',
-        color: colorAlgoplusBlue,
-    },
+    // {
+    //     type: 'line',
+    //     data: data.map((item) => item.lambdaApiUsage),
+    //     label: 'AWS Lambda API 호출 횟수',
+    //     yAxisId: 'callCount',
+    //     color: colorAlgoplusBlue,
+    // },
 ];
 
 const ApiUsageChart: React.FC<ApiUsageChartProps> = ({ className }) => {
@@ -52,47 +56,54 @@ const ApiUsageChart: React.FC<ApiUsageChartProps> = ({ className }) => {
     const [periodFilter, setPeriodFilter] = useState<PeriodFilterType>('today');
     const [period, setPeriod] = useState<string>('');
 
-    // const loadData = useCallback(() => {
-    //     fetchUsageLog(new Date()).then(setData);
-    //     // error 처리 필요
-    // }, []);
+    const handlePeriodFilter = (periodFilter: PeriodFilterType) => {
+        setPeriodFilter(periodFilter);
+        const now = new Date();
+        if (periodFilter === 'today') {
+            setPeriod(formatDate(now));
+        } else if (periodFilter === 'weekly') {
+            const dateBefore = getDateBefore(now, 7);
+            setPeriod(`${dateBefore} ~ ${formatDate(now)}`);
+        } else if (periodFilter === 'monthly') {
+            const dateBefore = getDateBefore(now, 30);
+            setPeriod(`${dateBefore} ~ ${formatDate(now)}`);
+        }
+    };
 
-    // const handlePeriodFilter = useCallback(
-    //     (periodFilter: PeriodFilterType) => {
-    //         setPeriodFilter(periodFilter);
-    //         const now = new Date();
-    //         if (periodFilter === 'today') {
-    //             setPeriod(formatDate(now));
-    //         } else if (periodFilter === 'weekly') {
-    //             const dateBefore = getDateBefore(now, 7);
-    //             setPeriod(`${dateBefore} ~ ${formatDate(now)}`);
-    //         } else if (periodFilter === 'monthly') {
-    //             const dateBefore = getDateBefore(now, 30);
-    //             setPeriod(`${dateBefore} ~ ${formatDate(now)}`);
-    //         }
-    //         loadData();
-    //     },
-    //     [loadData]
-    // );
+    const loadData = useCallback(() => {
+        setSeries([]);
+        if (periodFilter === 'today') {
+            fetchHourlyUsageMetrics(new Date(), setData, console.error);
+        } else {
+            const now = new Date();
+            const days = periodFilter === 'weekly' ? 7 : 30;
+            const dateBefore = new Date(
+                now.getTime() - days * 24 * 60 * 60 * 1000
+            );
+            fetchDailyUsageMetrics(dateBefore, now, setData, console.error);
+        }
+    }, [periodFilter]);
 
-    // useEffect(() => {
-    //     setPeriodFilter('today');
-    // }, []);
+    useEffect(() => {
+        handlePeriodFilter('today');
+        loadData();
+    }, [loadData]);
 
-    // useEffect(() => {
-    //     handlePeriodFilter(periodFilter);
-    // }, [periodFilter, handlePeriodFilter]);
+    useEffect(() => {
+        handlePeriodFilter(periodFilter);
+        loadData();
+    }, [periodFilter, loadData]);
 
-    // useEffect(() => {
-    //     setSeries(getSeriesFromData(data));
-    // }, [data]);
+    useEffect(() => {
+        setSeries(getSeriesFromData(data));
+    }, [data]);
 
     return (
         <div className={`${className}`}>
-            <div className='flex justify-between items-center px-3 h-10'>
+            <div className='flex justify-between items-center px-3 h-10 pt-1'>
                 <TimeDisplay icon='calendar' text={period} className='h-full' />
                 <h1 className='text-xl'></h1>
-                <FormControl variant='standard' sx={{ minWidth: 120 }}>
+                <FormControl variant='standard' sx={{ minWidth: 90 }}>
                     <Select
                         value={periodFilter}
                         onChange={(value) =>
@@ -105,7 +116,7 @@ const ApiUsageChart: React.FC<ApiUsageChartProps> = ({ className }) => {
                             paddingLeft: '6px',
                             marginBottom: '8px',
                             fontSize: '0.775rem',
-                            width: 120,
+                            width: 90,
                         }}
                     >
                         <MenuItem value='today'>오늘</MenuItem>
@@ -117,7 +128,7 @@ const ApiUsageChart: React.FC<ApiUsageChartProps> = ({ className }) => {
             </div>
             <ChartContainer
                 series={series}
-                height={280}
+                height={285}
                 xAxis={[
                     {
                         id: 'date',
@@ -132,7 +143,7 @@ const ApiUsageChart: React.FC<ApiUsageChartProps> = ({ className }) => {
                         position: 'left',
                         width: 70,
                         min: 0,
-                        max: 1000,
+                        max: 500,
                         // valueFormatter: (value) => {
                         //     if (value >= 1000) {
                         //         return `${(value / 1000).toFixed(1)}K`;
@@ -156,9 +167,6 @@ const ApiUsageChart: React.FC<ApiUsageChartProps> = ({ className }) => {
                 <LineHighlightPlot />
                 <ChartsXAxis
                     axisId='date'
-                    tickInterval={(value, index) => {
-                        return index % 3 === 0;
-                    }}
                     tickLabelStyle={{
                         fontSize: 10,
                     }}

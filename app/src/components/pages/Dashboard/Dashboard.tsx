@@ -22,6 +22,14 @@ import type {
 } from '@types/api';
 import { fetchAlgoPlusInformation } from '@services/firebase';
 import { updateAlgoPlusInformation } from '@services/apis/lambda';
+import {
+    fetchDailyUsageMetrics,
+    fetchUsageDocsBetweenDates,
+} from '../../../services/firebase';
+import {
+    ApiResponseTimeMetrics,
+    type ApiUsageMetrics,
+} from '../../../types/monitoring';
 
 const Dashboard = () => {
     const [githubInfo, setGithubInfo] = useState<GitHubMonitoringInfo | null>(
@@ -34,6 +42,9 @@ const Dashboard = () => {
     const [chromeWebStoreInfo, setChromeWebStoreInfo] =
         useState<ChromeWebStoreMonitoringInfo | null>({});
     const [lastUpdatedTime, setLastUpdatedTime] = useState<Date | null>(null);
+    const [apiUsageMetrics, setApiUsageMetrics] = useState<ApiUsageMetrics[]>(
+        []
+    );
 
     const loadData = () => {
         fetchAlgoPlusInformation(
@@ -43,7 +54,7 @@ const Dashboard = () => {
                 setJDoodleApiInfo(data.jdoodleApi);
                 setChromeWebStoreInfo(data.chromeWebStore);
                 setLastUpdatedTime(new Date(data.timestamp.seconds * 1000));
-                console.log(data);
+                // console.log(data);
             },
             (err) => {
                 console.error(err);
@@ -63,10 +74,12 @@ const Dashboard = () => {
         flushData();
         updateAlgoPlusInformation(
             (data) => {
-                loadData();
+                if (data === 'ok') {
+                    loadData();
+                }
             },
             (err) => {
-                console.log(err);
+                console.error(err);
             }
         );
     };
@@ -151,7 +164,16 @@ const Dashboard = () => {
             <div className='flex flex-wrap'>
                 <ItemWrapper className='flex-1/5'>
                     <UsageDonutWidget
-                        title='JDoodle API 사용량'
+                        title={
+                            <div className='flex flex-col items-center'>
+                                <h3 className='text-xl font-bold'>
+                                    JDoodle API 사용량
+                                </h3>
+                                <span className='text-gray-600'>
+                                    매일 9시 초기화
+                                </span>
+                            </div>
+                        }
                         value={jdoodleApiInfo?.creditSpentPerDay}
                         min={0}
                         max={jdoodleApiInfo?.maxCreditPerDay}
@@ -185,7 +207,16 @@ const Dashboard = () => {
                 </ItemWrapper>
                 <ItemWrapper className='flex-1/5'>
                     <UsageDonutWidget
-                        title='AWS Lambda 사용량'
+                        title={
+                            <div className='flex flex-col items-center'>
+                                <h3 className='text-xl font-bold'>
+                                    AWS Lambda 사용량
+                                </h3>
+                                <span className='text-gray-600'>
+                                    매월 1일 자정 초기화
+                                </span>
+                            </div>
+                        }
                         value={awsLambdaInfo?.totalInvocations}
                         min={0}
                         max={awsLambdaInfo?.freeTierLimit}
@@ -218,7 +249,10 @@ const Dashboard = () => {
                     />
                 </ItemWrapper>
                 <ItemWrapper className='flex-3/5'>
-                    <ApiUsageChart className='w-full pt-2 h-80' />
+                    <ApiUsageChart
+                        className='w-full pt-2 h-80'
+                        data={apiUsageMetrics}
+                    />
                 </ItemWrapper>
             </div>
 
