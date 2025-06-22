@@ -25,11 +25,11 @@ import { updateAlgoPlusInformation } from '@services/apis/lambda';
 import {
     fetchDailyUsageMetrics,
     fetchUsageDocsBetweenDates,
-} from '../../../services/firebase';
+} from '@services/firebase';
 import {
     ApiResponseTimeMetrics,
     type ApiUsageMetrics,
-} from '../../../types/monitoring';
+} from '@types/monitoring';
 
 const Dashboard = () => {
     const [githubInfo, setGithubInfo] = useState<GitHubMonitoringInfo | null>(
@@ -96,22 +96,20 @@ const Dashboard = () => {
             <div className='flex justify-between items-start'>
                 <h1 className='text-3xl font-bold mb-4'>Dashboard</h1>
                 <div className='flex items-center gap-2'>
-                    {lastUpdatedTime ? (
-                        <>
-                            <button
-                                disabled={loading}
-                                className='text-xs text-blue-900 border-blue-300 border-1 bg-blue-100 rounded-xl px-2 h-4 flex items-center justify-center'
-                                onClick={() => updateData()}
-                            >
-                                데이터 갱신
-                            </button>
-                            <TimeDisplay
-                                text={formatDateTime(lastUpdatedTime)}
-                            />
-                        </>
-                    ) : (
-                        <></>
-                    )}
+                    <button
+                        disabled={loading}
+                        className={`text-xs border-1 rounded-xl px-2 h-4 flex items-center justify-center transition-all ${
+                            loading
+                                ? 'text-gray-300 bg-gray-100 border-gray-300 cursor-none'
+                                : 'text-blue-900 bg-blue-100 border-blue-300 hover:bg-blue-400 hover:text-white '
+                        }`}
+                        onClick={() => updateData()}
+                    >
+                        데이터 갱신
+                    </button>
+                    <TimeDisplay
+                        text={loading ? '' : formatDateTime(lastUpdatedTime)}
+                    />
                 </div>
             </div>
             <div className='flex flex-wrap'>
