@@ -3,7 +3,7 @@
     "private": true,
     "version": "1.0.0",
     "type": "module",
-    "homepage": "https://h-spear.github.io/algo-plus-monitoring/app",
+    "homepage": "https://h-spear.github.io/algo-plus-monitoring/",
     "scripts": {
         "dev": "vite",
         "build": "tsc -b && vite build",
