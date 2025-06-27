@@ -25,7 +25,7 @@ const GitHubInfoContent: React.FC<GitHubInfoContentProps> = ({
 }) => {
     return (
         <div
-            className={`flex flex-col justify-between items-center w-full ${className}`}
+            className={`flex flex-col justify-between items-center w-full ${className} min-w-60`}
         >
             <p
                 className={`text-gray-400 font-thin flex items-center w-full pl-2 pt-2`}
