@@ -35,9 +35,11 @@ const GitHubIssuesDataGrid: React.FC<GitHubIssuesDataGridProps> = ({
                                 bug
                             </span>
                         </div>
-                        <div className='flex-1/6 text-center'>작성자</div>
+                        <div className='flex-1/6 text-center hidden min-[480px]:block'>
+                            작성자
+                        </div>
                     </div>
-                    <div className='overflow-y-scroll h-57 mt-3 '>
+                    <div className=' h-57 mt-3'>
                         {data.length > 0 ? (
                             data.map((issue, index) => (
                                 <div
@@ -50,14 +52,17 @@ const GitHubIssuesDataGrid: React.FC<GitHubIssuesDataGridProps> = ({
                                     }`}
                                 >
                                     <div className='flex flex-col flex-5/6 px-2'>
-                                        <p className='flex-1 font-bold'>
+                                        <p className='flex-1 font-bold flex items-center'>
                                             <a
-                                                className=' hover:bg-red-50 transition-all duration-300 px-1
+                                                className=' hover:bg-red-50 transition-all duration-300 px-1 flex items-center
 '
                                                 href={issue.url}
                                                 target='_blank'
                                             >
-                                                {issue.title}
+                                                <span className='overflow-hidden whitespace-nowrap inline-block max-w-50 min-[480px]:max-w-60 min-[800px]:max-w-120 text-ellipsis'>
+                                                    {issue.title}
+                                                    asdasdasasdasdasasdasdasasdasdasasdasdasasdasdas
+                                                </span>
                                             </a>
                                             <span className='text-blue-500 text-sm'>
                                                 ({issue.comments})
@@ -71,7 +76,7 @@ const GitHubIssuesDataGrid: React.FC<GitHubIssuesDataGridProps> = ({
                                             )}
                                         </span>
                                     </div>
-                                    <div className='flex-1/6 flex justify-center'>
+                                    <div className='flex-1/6 justify-center hidden min-[480px]:flex'>
                                         <a
                                             className='flex justify-between items-center gap-3 group'
                                             href={`https://github.com/${issue.user.login}`}
@@ -82,7 +87,7 @@ const GitHubIssuesDataGrid: React.FC<GitHubIssuesDataGridProps> = ({
                                                 alt='github_profile'
                                                 className='h-10 rounded-4xl'
                                             />
-                                            <span className='text-sm text-gray-500 group-hover:text-blue-500 transition-all duration-300'>
+                                            <span className='text-sm text-gray-500 group-hover:text-blue-500 transition-all duration-300 hidden sm:block min-w-30'>
                                                 {issue.user.login}
                                             </span>
                                         </a>
