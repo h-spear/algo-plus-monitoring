@@ -11,9 +11,11 @@ import {
 import { fireStore } from '../../firebase';
 import type { AlgoPlusInformation } from '@types/api';
 import { convertKeysToCamel } from '@utils/naming';
-import type { ApiUsageMetrics } from '../types/monitoring';
+import type { ApiUsageMetrics } from '@types/monitoring';
+import type { HealthCheckData } from '@types/api';
 
 const COLLECTION_ALGOPLUS_INFORMATION = 'algoplus-information';
+const COLLECTION_API_HEALTH_CHECK = 'api-health-check';
 const COLLECTION_API_USAGE = 'api-usage-metrics';
 const COLLECTION_API_DAILY_USAGE = 'api-daily-usage-metrics';
 
@@ -43,6 +45,18 @@ export const fetchAlgoPlusInformation = async (
         COLLECTION_ALGOPLUS_INFORMATION,
         'current',
         (data) => success(convertKeysToCamel<AlgoPlusInformation>(data)),
+        (err) => error(err)
+    );
+};
+
+export const fetchHealthCheckData = async (
+    success: (data: HealthCheckData) => void,
+    error: (err: unknown) => void
+): Promise<void> => {
+    fetchDocumentById(
+        COLLECTION_API_HEALTH_CHECK,
+        'current',
+        (data) => success(convertKeysToCamel<HealthCheckData>(data)),
         (err) => error(err)
     );
 };

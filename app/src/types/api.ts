@@ -70,3 +70,13 @@ export type AlgoPlusInformation = {
     github?: GitHubInfo;
     awsLambda?: AwsLambdaInfo;
 };
+
+export type HealthCheckMetrics = {
+    elapsedTime: number;
+    pass: boolean;
+};
+
+export type HealthCheckData = {
+    algoPlusCompiler?: HealthCheckMetrics;
+    jdoodleCompiler?: HealthCheckMetrics;
+};

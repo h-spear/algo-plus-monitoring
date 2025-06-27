@@ -70,6 +70,11 @@ const ApiUsageChart: React.FC<ApiUsageChartProps> = ({
         } else if (periodFilter === 'monthly') {
             const dateBefore = getDateBefore(now, 30);
             setPeriod(`${dateBefore} ~ ${formatDate(now)}`);
+        } else if (periodFilter === 'daily') {
+            alert('날짜 선택 기능은 구현 예정입니다!');
+            handlePeriodFilter('today');
+        } else {
+            alert('unknown period');
         }
     };
 

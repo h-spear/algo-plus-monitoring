@@ -8,7 +8,7 @@ import TextWidgetContent from '@components/base/TextWidgetContent/TextWidgetCont
 import RocketIcon from '@icons/RocketIcon/RocketIcon';
 import UsageDonutWidget from '@components/composites/UsageDonutWidget/UsageDonutWidget';
 import UsageInfo from '@components/base/UsageInfo/UsageInfo';
-import StatusWidget from '@components/base/StatusWidget/StatusWidget';
+import HealthCheckWidgetContent from '@components/base/HealthCheckWidgetContent/HealthCheckWidgetContent';
 import ApiUsageChart from '@components/composites/ApiUsageChart/ApiUsageChart';
 import { colorAlgoplusBlue, colorAlgoplusOrange } from '@themes';
 import TimeDisplay from '@components/base/TimeDisplay/TimeDisplay';
@@ -21,9 +21,13 @@ import type {
 } from '@types/api';
 import { fetchAlgoPlusInformation } from '@services/firebase';
 import { updateAlgoPlusInformation } from '@services/apis/lambda';
-import { type ApiUsageMetrics } from '@types/monitoring';
 import GitHubIssuesDataGrid from '@components/composites/GitHubIssuesDataGrid/GitHubIssuesDataGrid';
 import GitHubInfoContent from '@components/composites/GitHubInfoContent/GitHubInfoContent';
+import type { HealthCheckData } from '@types/api';
+import { fetchHealthCheckData } from '@services/firebase';
+import type { AlgoPlusInformation } from '@types/api';
+import CloudUploadRoundedIcon from '@mui/icons-material/CloudUploadRounded';
+import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
 
 const Dashboard = () => {
     const [githubInfo, setGithubInfo] = useState<GitHubMonitoringInfo | null>(
@@ -36,23 +40,29 @@ const Dashboard = () => {
     const [chromeWebStoreInfo, setChromeWebStoreInfo] =
         useState<ChromeWebStoreMonitoringInfo | null>({});
     const [lastUpdatedTime, setLastUpdatedTime] = useState<Date | null>(null);
-    const [apiUsageMetrics, setApiUsageMetrics] = useState<ApiUsageMetrics[]>(
-        []
-    );
+    const [healthCheckData, setHealthCheckData] =
+        useState<HealthCheckData | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
 
     const loadData = () => {
         fetchAlgoPlusInformation(
-            (data) => {
+            (data: AlgoPlusInformation) => {
                 setGithubInfo(data.github);
                 setAwsLambdaInfo(data.awsLambda);
                 setJDoodleApiInfo(data.jdoodleApi);
                 setChromeWebStoreInfo(data.chromeWebStore);
                 setLastUpdatedTime(new Date(data.timestamp.seconds * 1000));
                 setLoading(false);
-                console.log(data);
             },
-            (err) => {
+            (err: Error) => {
+                console.error(err);
+            }
+        );
+        fetchHealthCheckData(
+            (data: HealthCheckData) => {
+                setHealthCheckData(data);
+            },
+            (err: Error) => {
                 console.error(err);
             }
         );
@@ -70,12 +80,12 @@ const Dashboard = () => {
     const updateData = () => {
         flushData();
         updateAlgoPlusInformation(
-            (data) => {
+            (data: AlgoPlusInformation) => {
                 if (data === 'ok') {
                     loadData();
                 }
             },
-            (err) => {
+            (err: Error) => {
                 console.error(err);
             }
         );
@@ -260,18 +270,36 @@ const Dashboard = () => {
                     <div className='flex w-full flex-col sm:flex-row'>
                         <div className='flex flex-1/2 flex-col'>
                             <ItemWrapper className='flex-1/2'>
-                                <StatusWidget
-                                    passed={true}
-                                    label='Algo Plus 컴파일 API'
-                                    caption='응답 시간 : 35ms'
-                                />
+                                <div className='flex flex-col'>
+                                    <p
+                                        className={`text-gray-400 font-thin flex items-center w-full pl-2 pt-2 `}
+                                    >
+                                        <CloudUploadRoundedIcon fontSize='inherit' />
+                                        <span className='ml-1 text-xs'>
+                                            알고플러스 컴파일 API
+                                        </span>
+                                    </p>
+                                    <HealthCheckWidgetContent
+                                        data={healthCheckData?.algoPlusCompiler}
+                                        loading={loading}
+                                    />
+                                </div>
                             </ItemWrapper>
                             <ItemWrapper className='flex-1/2'>
-                                <StatusWidget
-                                    passed={true}
-                                    label='JDoodle 컴파일 API'
-                                    caption='응답 시간 : 35ms'
-                                />
+                                <div className='flex flex-col'>
+                                    <p
+                                        className={`text-gray-400 font-thin flex items-center w-full pl-2 pt-2 `}
+                                    >
+                                        <LightModeRoundedIcon fontSize='inherit' />
+                                        <span className='ml-1 text-xs'>
+                                            JDoodle 컴파일 API
+                                        </span>
+                                    </p>
+                                    <HealthCheckWidgetContent
+                                        data={healthCheckData?.jdoodleCompiler}
+                                        loading={loading}
+                                    />
+                                </div>
                             </ItemWrapper>
                         </div>
                         <div className='flex flex-1/2 flex-col'>
