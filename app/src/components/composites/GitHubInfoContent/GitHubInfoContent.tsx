@@ -112,7 +112,7 @@ const GitHubInfoContent: React.FC<GitHubInfoContentProps> = ({
                                     {data.openIssuesCount
                                         ? data.openIssuesCount
                                         : '0'}
-                                </b>{' '}
+                                </b>
                                 개
                             </span>
                         </span>
@@ -124,7 +124,7 @@ const GitHubInfoContent: React.FC<GitHubInfoContentProps> = ({
                                 열린 PR :{' '}
                                 <b>
                                     {data.openPrCount ? data.openPrCount : '0'}
-                                </b>{' '}
+                                </b>
                                 개
                             </span>
                         </span>
@@ -142,7 +142,7 @@ const GitHubInfoContent: React.FC<GitHubInfoContentProps> = ({
                                 <BalanceRoundedIcon />
                             </div>
                             <span>
-                                라이센스 :{' '}
+                                라이선스 :{' '}
                                 <b>{data.license ? data.license : '없음'}</b>
                             </span>
                         </span>

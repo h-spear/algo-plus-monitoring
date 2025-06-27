@@ -75,12 +75,14 @@ const Dashboard = () => {
         setJDoodleApiInfo({});
         setChromeWebStoreInfo({});
         setLastUpdatedTime(null);
+        setHealthCheckData(null);
     };
 
     const updateData = () => {
         flushData();
         updateAlgoPlusInformation(
             (data: AlgoPlusInformation) => {
+                console.log(data);
                 if (data === 'ok') {
                     loadData();
                 }
