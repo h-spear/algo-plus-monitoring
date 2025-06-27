@@ -1,7 +1,6 @@
 import { post } from '@utils/http-commons';
 
-const ALGO_PLUS_MONITORING_API_URL =
-    'https://xiq3phad6a.execute-api.ap-northeast-2.amazonaws.com/default/AlgoPlusMonitoringApi';
+const ALGO_PLUS_MONITORING_API_URL = import.meta.env.VITE_MONITORING_API_URL;
 
 export const updateAlgoPlusInformation = async (
     success?: (data: string) => void,
