@@ -272,7 +272,7 @@ const Dashboard = () => {
                     <div className='flex w-full flex-col sm:flex-row'>
                         <div className='flex flex-1/2 flex-col'>
                             <ItemWrapper className='flex-1/2'>
-                                <div className='flex flex-col'>
+                                <div className='flex flex-col w-full'>
                                     <p
                                         className={`text-gray-400 font-thin flex items-center w-full pl-2 pt-2 `}
                                     >
@@ -281,14 +281,18 @@ const Dashboard = () => {
                                             알고플러스 컴파일 API
                                         </span>
                                     </p>
-                                    <HealthCheckWidgetContent
-                                        data={healthCheckData?.algoPlusCompiler}
-                                        loading={loading}
-                                    />
+                                    <div className='w-full flex justify-center'>
+                                        <HealthCheckWidgetContent
+                                            data={
+                                                healthCheckData?.algoPlusCompiler
+                                            }
+                                            loading={loading}
+                                        />
+                                    </div>
                                 </div>
                             </ItemWrapper>
                             <ItemWrapper className='flex-1/2'>
-                                <div className='flex flex-col'>
+                                <div className='flex flex-col w-full'>
                                     <p
                                         className={`text-gray-400 font-thin flex items-center w-full pl-2 pt-2 `}
                                     >
@@ -297,10 +301,14 @@ const Dashboard = () => {
                                             JDoodle 컴파일 API
                                         </span>
                                     </p>
-                                    <HealthCheckWidgetContent
-                                        data={healthCheckData?.jdoodleCompiler}
-                                        loading={loading}
-                                    />
+                                    <div className='w-full flex justify-center'>
+                                        <HealthCheckWidgetContent
+                                            data={
+                                                healthCheckData?.jdoodleCompiler
+                                            }
+                                            loading={loading}
+                                        />
+                                    </div>
                                 </div>
                             </ItemWrapper>
                         </div>
