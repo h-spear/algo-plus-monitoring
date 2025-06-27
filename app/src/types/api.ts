@@ -15,6 +15,23 @@ export type ChromeWebStoreInfo = {
     language: string;
 };
 
+export type GitHubUser = {
+    id: string;
+    login: string;
+    avatarUrl: string;
+};
+
+export type GitHubIssue = {
+    id: string;
+    number: number;
+    title: string;
+    url: string;
+    user: GitHubUser;
+    comments: number;
+    createdAt: Date;
+    updatedAt: Date;
+};
+
 export type GitHubInfo = {
     id: number;
     nodeId: string;
@@ -31,6 +48,8 @@ export type GitHubInfo = {
     commitsCount: number;
     contributorsCount: number;
     branchesCount: number;
+    bugIssuesCount: number;
+    bugIssues: GitHubIssue[];
 };
 
 export type AwsLambdaFunctionInfo = {

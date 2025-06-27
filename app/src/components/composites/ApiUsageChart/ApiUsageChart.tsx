@@ -23,7 +23,6 @@ import {
 type PeriodFilterType = 'today' | 'weekly' | 'monthly' | 'daily';
 interface ApiUsageChartProps {
     className?: string;
-    data: ApiUsageMetrics[];
     loading: boolean;
 }
 
@@ -116,7 +115,6 @@ const ApiUsageChart: React.FC<ApiUsageChartProps> = ({
                     text={loading ? '' : period}
                     className='h-full'
                 />
-                <h1 className='text-xl'></h1>
                 <FormControl variant='standard' sx={{ minWidth: 90 }}>
                     <Select
                         disabled={loading}
@@ -143,72 +141,82 @@ const ApiUsageChart: React.FC<ApiUsageChartProps> = ({
                 </FormControl>
             </div>
 
-            <div
-                className={`flex justify-center items-center h-60 ${
-                    loading ? '' : 'hidden'
-                }`}
-            >
-                <CircularProgress color='primary' size={100} />
-            </div>
-            <div className={`${loading ? 'hidden' : ''}`}>
-                <ChartContainer
-                    series={series}
-                    height={285}
-                    xAxis={[
-                        {
-                            id: 'date',
-                            data: data.map((x) => x.time),
-                            scaleType: 'band',
-                        },
-                    ]}
-                    yAxis={[
-                        {
-                            id: 'callCount',
-                            scaleType: 'linear',
-                            position: 'left',
-                            width: 70,
-                            min: 0,
-                            max: 500,
-                            // valueFormatter: (value) => {
-                            //     if (value >= 1000) {
-                            //         return `${(value / 1000).toFixed(1)}K`;
-                            //     }
-                            //     return `${value}`;
-                            // },
-                        },
-                        {
-                            id: 'user',
-                            scaleType: 'linear',
-                            position: 'right',
-                            valueFormatter: (value) => `${value}`,
-                            width: 50,
-                            max: 300,
-                        },
-                    ]}
-                >
-                    <ChartsAxisHighlight x='line' />
-                    <BarPlot />
-                    <LinePlot />
-                    <LineHighlightPlot />
-                    <ChartsXAxis
-                        axisId='date'
-                        tickLabelStyle={{
-                            fontSize: 10,
-                        }}
-                    />
-                    <ChartsYAxis
-                        label='호출 횟수(회)'
-                        axisId='callCount'
-                        tickLabelStyle={{ fontSize: 10 }}
-                    />
-                    <ChartsYAxis
-                        label='사용자(명)'
-                        axisId='user'
-                        tickLabelStyle={{ fontSize: 10 }}
-                    />
-                    <ChartsTooltip />
-                </ChartContainer>
-            </div>
+            {!loading ? (
+                <>
+                    <div
+                        className={`flex justify-center items-center h-60 ${
+                            loading ? '' : 'hidden'
+                        }`}
+                    >
+                        <CircularProgress color='primary' size={100} />
+                    </div>
+                    <div className={`${loading ? 'hidden' : ''}`}>
+                        <ChartContainer
+                            series={series}
+                            height={285}
+                            xAxis={[
+                                {
+                                    id: 'date',
+                                    data: data.map((x) => x.time),
+                                    scaleType: 'band',
+                                },
+                            ]}
+                            yAxis={[
+                                {
+                                    id: 'callCount',
+                                    scaleType: 'linear',
+                                    position: 'left',
+                                    width: 70,
+                                    min: 0,
+                                    max: 1000,
+                                    // valueFormatter: (value) => {
+                                    //     if (value >= 1000) {
+                                    //         return `${(value / 1000).toFixed(1)}K`;
+                                    //     }
+                                    //     return `${value}`;
+                                    // },
+                                },
+                                {
+                                    id: 'user',
+                                    scaleType: 'linear',
+                                    position: 'right',
+                                    valueFormatter: (value) => `${value}`,
+                                    width: 50,
+                                    max: 300,
+                                },
+                            ]}
+                        >
+                            <ChartsAxisHighlight x='line' />
+                            <BarPlot />
+                            <LinePlot />
+                            <LineHighlightPlot />
+                            <ChartsXAxis
+                                axisId='date'
+                                tickLabelStyle={{
+                                    fontSize: 10,
+                                }}
+                            />
+                            <ChartsYAxis
+                                label='호출 횟수(회)'
+                                axisId='callCount'
+                                tickLabelStyle={{ fontSize: 10 }}
+                            />
+                            <ChartsYAxis
+                                label='사용자(명)'
+                                axisId='user'
+                                tickLabelStyle={{ fontSize: 10 }}
+                            />
+                            <ChartsTooltip />
+                        </ChartContainer>
+                    </div>
+                </>
+            ) : (
+                <>
+                    <div className='flex w-full h-full justify-center items-center pb-20'>
+                        <CircularProgress color='primary' size={100} />
+                    </div>
+                </>
+            )}
         </div>
     );
 };

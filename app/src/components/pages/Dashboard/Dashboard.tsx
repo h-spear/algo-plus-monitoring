@@ -22,14 +22,9 @@ import type {
 } from '@types/api';
 import { fetchAlgoPlusInformation } from '@services/firebase';
 import { updateAlgoPlusInformation } from '@services/apis/lambda';
-import {
-    fetchDailyUsageMetrics,
-    fetchUsageDocsBetweenDates,
-} from '@services/firebase';
-import {
-    ApiResponseTimeMetrics,
-    type ApiUsageMetrics,
-} from '@types/monitoring';
+import { type ApiUsageMetrics } from '@types/monitoring';
+import DataGrid from '@components/base/DataGrid/DataGrid';
+import GitHubIssuesDataGrid from './../../composites/GitHubIssuesDataGrid/GitHubIssuesDataGrid';
 
 const Dashboard = () => {
     const [githubInfo, setGithubInfo] = useState<GitHubMonitoringInfo | null>(
@@ -56,7 +51,7 @@ const Dashboard = () => {
                 setChromeWebStoreInfo(data.chromeWebStore);
                 setLastUpdatedTime(new Date(data.timestamp.seconds * 1000));
                 setLoading(false);
-                // console.log(data);
+                console.log(data);
             },
             (err) => {
                 console.error(err);
@@ -93,7 +88,7 @@ const Dashboard = () => {
 
     return (
         <div className='bg-white max-w-340 min-w-90 w-full m-6 py-4 px-6'>
-            <div className='flex justify-between items-start'>
+            <div className='flex justify-between flex-col items-center pb-2 sm:items-start sm:flex-row sm:pb-0'>
                 <h1 className='text-3xl font-bold mb-4'>Dashboard</h1>
                 <div className='flex items-center gap-2'>
                     <button
@@ -108,6 +103,7 @@ const Dashboard = () => {
                         데이터 갱신
                     </button>
                     <TimeDisplay
+                        className='w-36'
                         text={loading ? '' : formatDateTime(lastUpdatedTime)}
                     />
                 </div>
@@ -255,7 +251,6 @@ const Dashboard = () => {
                 <ItemWrapper className='flex-3/5'>
                     <ApiUsageChart
                         className='w-full pt-2 h-80'
-                        data={apiUsageMetrics}
                         loading={loading}
                     />
                 </ItemWrapper>
@@ -263,50 +258,46 @@ const Dashboard = () => {
 
             <div className='flex flex-wrap'>
                 <ItemWrapper className='flex-2/5' outline={false}>
-                    <div className='flex w-full flex-col'>
-                        <div className='flex flex-1/2 flex-col sm:flex-row'>
+                    <div className='flex w-full flex-row'>
+                        <div className='flex flex-1/2 flex-row sm:flex-col'>
                             <ItemWrapper className='flex-1/2'>
                                 <StatusWidget
-                                    passed={false}
-                                    label='백준 제출 API 상태'
-                                    caption='제출 번호 : 12345678'
-                                    captionLink='https://naver.com'
+                                    passed={true}
+                                    label='Algo Plus 컴파일 API'
+                                    caption='응답 시간 : 35ms'
                                 />
                             </ItemWrapper>
                             <ItemWrapper className='flex-1/2'>
                                 <StatusWidget
                                     passed={true}
-                                    label='백준 제출 API 상태'
-                                    caption='제출 번호 : 12345678'
+                                    label='JDoodle 컴파일 API'
+                                    caption='응답 시간 : 35ms'
                                 />
                             </ItemWrapper>
                         </div>
-                        <div className='flex flex-1/2 flex-col sm:flex-row'>
+                        <div className='flex flex-1/2 flex-row sm:flex-col bg-red-300'>
                             <ItemWrapper className='flex-1/2'>
                                 <StatusWidget
                                     passed={true}
-                                    label='백준 제출 API 상태'
+                                    label='Algo Plus 컴파일 API'
+                                    caption='응답 시간 : 35ms'
                                 />
                             </ItemWrapper>
                             <ItemWrapper className='flex-1/2'>
                                 <StatusWidget
                                     passed={true}
-                                    label='백준 제출 API 상태'
-                                    caption='제출 번호 : 12345678'
-                                    captionLink='https://naver.com'
+                                    label='JDoodle 컴파일 API'
+                                    caption='응답 시간 : 35ms'
                                 />
                             </ItemWrapper>
                         </div>
                     </div>
                 </ItemWrapper>
                 <ItemWrapper className='flex-3/5'>
-                    <ApiStatusChart className='w-full pt-2 h-84 my-[0.5px]' />
-                </ItemWrapper>
-            </div>
-
-            <div className='flex flex-wrap'>
-                <ItemWrapper className='flex-3/5'>
-                    <div className='w-full p-3 h-20'>Contributors</div>
+                    <GitHubIssuesDataGrid
+                        data={githubInfo.bugIssues}
+                        className='h-84'
+                    />
                 </ItemWrapper>
             </div>
         </div>

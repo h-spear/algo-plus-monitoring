@@ -26,3 +26,13 @@ export const getDateBefore = (date: Date, days: number): string => {
     const day = String(pastDate.getDate()).padStart(2, '0');
     return `${year}. ${month}. ${day}`;
 };
+
+export const formatDateToMonthDayYear = (dateStr: string): string => {
+    const date = new Date(dateStr);
+    const options: Intl.DateTimeFormatOptions = {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+    };
+    return date.toLocaleDateString('en-US', options);
+};
