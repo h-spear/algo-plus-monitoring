@@ -61,7 +61,6 @@ const GitHubIssuesDataGrid: React.FC<GitHubIssuesDataGridProps> = ({
                                             >
                                                 <span className='overflow-hidden whitespace-nowrap inline-block max-w-50 min-[480px]:max-w-60 min-[800px]:max-w-120 text-ellipsis'>
                                                     {issue.title}
-                                                    asdasdasasdasdasasdasdasasdasdasasdasdasasdasdas
                                                 </span>
                                             </a>
                                             <span className='text-blue-500 text-sm'>
