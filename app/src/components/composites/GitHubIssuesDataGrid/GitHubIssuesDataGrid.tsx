@@ -40,56 +40,54 @@ const GitHubIssuesDataGrid: React.FC<GitHubIssuesDataGridProps> = ({
                     <div className='overflow-y-scroll h-57 mt-3 '>
                         {data.length > 0 ? (
                             data.map((issue, index) => (
-                                <>
-                                    <div
-                                        key={issue.id || index}
-                                        className={`flex py-2 px-4 border-t border-gray-200 h-16 items-center justify-between ${
-                                            data.length < 4 &&
-                                            index == data.length - 1
-                                                ? 'border-b'
-                                                : ''
-                                        }`}
-                                    >
-                                        <div className='flex flex-col flex-5/6 px-2'>
-                                            <p className='flex-1 font-bold'>
-                                                <a
-                                                    className=' hover:bg-red-50 transition-all duration-300 px-1
-'
-                                                    href={issue.url}
-                                                    target='_blank'
-                                                >
-                                                    {issue.title}
-                                                </a>
-                                                <span className='text-blue-500 text-sm'>
-                                                    ({issue.comments})
-                                                </span>
-                                            </p>
-                                            <span className='text-xs text-gray-500 font-mono tracking-tighter px-1'>
-                                                #{issue.number} ·{' '}
-                                                {issue.user.login} opened on{' '}
-                                                {formatDateToMonthDayYear(
-                                                    issue.createdAt
-                                                )}
-                                            </span>
-                                        </div>
-                                        <div className='flex-1/6 flex justify-center'>
+                                <div
+                                    key={issue.id}
+                                    className={`flex py-2 px-4 border-t border-gray-200 h-16 items-center justify-between ${
+                                        data.length < 4 &&
+                                        index == data.length - 1
+                                            ? 'border-b'
+                                            : ''
+                                    }`}
+                                >
+                                    <div className='flex flex-col flex-5/6 px-2'>
+                                        <p className='flex-1 font-bold'>
                                             <a
-                                                className='flex justify-between items-center gap-3 group'
-                                                href={`https://github.com/${issue.user.login}`}
+                                                className=' hover:bg-red-50 transition-all duration-300 px-1
+'
+                                                href={issue.url}
                                                 target='_blank'
                                             >
-                                                <img
-                                                    src={`${issue.user.avatarUrl}`}
-                                                    alt='github_profile'
-                                                    className='h-10 rounded-4xl'
-                                                />
-                                                <span className='text-sm text-gray-500 group-hover:text-blue-500 transition-all duration-300'>
-                                                    {issue.user.login}
-                                                </span>
+                                                {issue.title}
                                             </a>
-                                        </div>
+                                            <span className='text-blue-500 text-sm'>
+                                                ({issue.comments})
+                                            </span>
+                                        </p>
+                                        <span className='text-xs text-gray-500 font-mono tracking-tighter px-1'>
+                                            #{issue.number} · {issue.user.login}{' '}
+                                            opened on{' '}
+                                            {formatDateToMonthDayYear(
+                                                issue.createdAt
+                                            )}
+                                        </span>
                                     </div>
-                                </>
+                                    <div className='flex-1/6 flex justify-center'>
+                                        <a
+                                            className='flex justify-between items-center gap-3 group'
+                                            href={`https://github.com/${issue.user.login}`}
+                                            target='_blank'
+                                        >
+                                            <img
+                                                src={`${issue.user.avatarUrl}`}
+                                                alt='github_profile'
+                                                className='h-10 rounded-4xl'
+                                            />
+                                            <span className='text-sm text-gray-500 group-hover:text-blue-500 transition-all duration-300'>
+                                                {issue.user.login}
+                                            </span>
+                                        </a>
+                                    </div>
+                                </div>
                             ))
                         ) : (
                             <h1 className='flex h-full justify-center items-center'>

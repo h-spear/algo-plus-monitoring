@@ -6,12 +6,11 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 import ChromeIcon from '@icons/ChromeIcon/ChromeIcon';
 import TextWidgetContent from '@components/base/TextWidgetContent/TextWidgetContent';
 import RocketIcon from '@icons/RocketIcon/RocketIcon';
-import UsageDonutWidget from '@components/base/UsageDonutWidget/UsageDonutWidget';
+import UsageDonutWidget from '@components/composites/UsageDonutWidget/UsageDonutWidget';
 import UsageInfo from '@components/base/UsageInfo/UsageInfo';
 import StatusWidget from '@components/base/StatusWidget/StatusWidget';
 import ApiUsageChart from '@components/composites/ApiUsageChart/ApiUsageChart';
 import { colorAlgoplusBlue, colorAlgoplusOrange } from '@themes';
-import ApiStatusChart from '@components/composites/ApiStatusChart/ApiStatusChart';
 import TimeDisplay from '@components/base/TimeDisplay/TimeDisplay';
 import { formatDateTime } from '@utils/date';
 import type {
@@ -23,8 +22,8 @@ import type {
 import { fetchAlgoPlusInformation } from '@services/firebase';
 import { updateAlgoPlusInformation } from '@services/apis/lambda';
 import { type ApiUsageMetrics } from '@types/monitoring';
-import DataGrid from '@components/base/DataGrid/DataGrid';
-import GitHubIssuesDataGrid from './../../composites/GitHubIssuesDataGrid/GitHubIssuesDataGrid';
+import GitHubIssuesDataGrid from '@components/composites/GitHubIssuesDataGrid/GitHubIssuesDataGrid';
+import GitHubInfoContent from '@components/composites/GitHubInfoContent/GitHubInfoContent';
 
 const Dashboard = () => {
     const [githubInfo, setGithubInfo] = useState<GitHubMonitoringInfo | null>(
@@ -258,8 +257,8 @@ const Dashboard = () => {
 
             <div className='flex flex-wrap'>
                 <ItemWrapper className='flex-2/5' outline={false}>
-                    <div className='flex w-full flex-row'>
-                        <div className='flex flex-1/2 flex-row sm:flex-col'>
+                    <div className='flex w-full flex-col sm:flex-row'>
+                        <div className='flex flex-1/2 flex-col'>
                             <ItemWrapper className='flex-1/2'>
                                 <StatusWidget
                                     passed={true}
@@ -275,19 +274,12 @@ const Dashboard = () => {
                                 />
                             </ItemWrapper>
                         </div>
-                        <div className='flex flex-1/2 flex-row sm:flex-col bg-red-300'>
+                        <div className='flex flex-1/2 flex-col'>
                             <ItemWrapper className='flex-1/2'>
-                                <StatusWidget
-                                    passed={true}
-                                    label='Algo Plus 컴파일 API'
-                                    caption='응답 시간 : 35ms'
-                                />
-                            </ItemWrapper>
-                            <ItemWrapper className='flex-1/2'>
-                                <StatusWidget
-                                    passed={true}
-                                    label='JDoodle 컴파일 API'
-                                    caption='응답 시간 : 35ms'
+                                <GitHubInfoContent
+                                    data={githubInfo}
+                                    loading={loading}
+                                    className='h-84'
                                 />
                             </ItemWrapper>
                         </div>
