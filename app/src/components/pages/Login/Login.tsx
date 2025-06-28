@@ -34,7 +34,7 @@ const Login = () => {
         event.preventDefault();
         if (!auth) return;
         if (auth.login(password)) {
-            alert('success!');
+            console.log('success!');
         } else {
             alert('invalid password.');
         }
