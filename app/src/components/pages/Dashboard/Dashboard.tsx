@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import ItemWrapper from '@components/base/ItemWrapper/ItemWrapper';
 import PersonRoundedIcon from '@mui/icons-material/PersonRounded';
 import GradeRoundedIcon from '@mui/icons-material/GradeRounded';
@@ -28,6 +28,8 @@ import { fetchHealthCheckData } from '@services/firebase';
 import type { AlgoPlusInformation } from '@types/api';
 import CloudUploadRoundedIcon from '@mui/icons-material/CloudUploadRounded';
 import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
+import { AuthContext } from '@/auth/AuthContext';
+import { Button } from '@mui/material';
 
 const Dashboard = () => {
     const [githubInfo, setGithubInfo] = useState<GitHubMonitoringInfo | null>(
@@ -43,6 +45,7 @@ const Dashboard = () => {
     const [healthCheckData, setHealthCheckData] =
         useState<HealthCheckData | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
+    const auth = useContext<AuthContext>(AuthContext);
 
     const loadData = () => {
         fetchAlgoPlusInformation(
@@ -100,7 +103,20 @@ const Dashboard = () => {
     return (
         <div className='bg-white max-w-340 min-w-90 w-full m-6 py-4 px-6'>
             <div className='flex justify-between flex-col items-center pb-2 sm:items-start sm:flex-row sm:pb-0'>
-                <h1 className='text-3xl font-bold mb-4'>Dashboard</h1>
+                <h1 className='text-3xl font-bold mb-4 font-mono group relative cursor-pointer'>
+                    Dashboard
+                    <div className='hidden group-hover:flex absolute w-50 h-20 justify-center items-center'>
+                        <div className='w-full bg-green-900 absolute top-0 left-0 h-full group-hover:opacity-30 rounded-b-xl rounded-tr-xl'></div>
+                        <Button
+                            onClick={() => auth.logout()}
+                            variant='contained'
+                            color='success'
+                            sx={{ width: '120px' }}
+                        >
+                            LOGOUT
+                        </Button>
+                    </div>
+                </h1>
                 <div className='flex items-center gap-2'>
                     <button
                         disabled={loading}
