@@ -34,6 +34,7 @@ jobs:
           echo "VITE_JDOODLE_CLIENT_ID=${{ secrets.VITE_JDOODLE_CLIENT_ID }}" >> .env
           echo "VITE_JDOODLE_CLIENT_SECRET=${{ secrets.VITE_JDOODLE_CLIENT_SECRET }}" >> .env
           echo "VITE_MONITORING_API_URL=${{ secrets.VITE_MONITORING_API_URL }}" >> .env
+          echo "VITE_ADMINISTRATOR_PASSWORD=${{ secrets.VITE_ADMINISTRATOR_PASSWORD }}" >> .env
 
       - name: Build
         working-directory: app

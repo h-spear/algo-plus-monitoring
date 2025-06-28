@@ -1,10 +1,15 @@
 import './App.css';
-import Dashboard from './components/pages/Dashboard/Dashboard';
+import { useAuth } from './auth/AuthContext';
+import Dashboard from '@components/pages/Dashboard/Dashboard';
+import Login from '@components/pages/Login/Login';
 
 export default function App() {
+    const { isAuthenticated } = useAuth();
+
     return (
         <div className='min-h-dvh flex justify-center'>
-            <Dashboard />
+            {!isAuthenticated && <Login />}
+            {isAuthenticated && <Dashboard />}
         </div>
     );
 }
