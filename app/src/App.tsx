@@ -7,7 +7,7 @@ export default function App() {
     const { isAuthenticated } = useAuth();
 
     return (
-        <div className='min-h-dvh flex justify-center'>
+        <div className='min-h-dvh flex justify-center w-full overflow-hidden'>
             {!isAuthenticated && <Login />}
             {isAuthenticated && <Dashboard />}
         </div>
