@@ -45,11 +45,7 @@ const Login = () => {
             <div className='bg-[#f0ffc0] min-w-80 max-w-100 mx-6 w-full h-64 flex justify-center items-center flex-col rounded-2xl relative shadow-2xl'>
                 <div className='absolute top-[-36px] w-240 text-center'>
                     <p className='font-sans'>
-                        <span className='max-[480px]:hidden'>
-                            Algo Plus Dashboard
-                        </span>
-                        <span className='min-[480px]:hidden'>This</span> is
-                        accessible to administrators only.
+                        This is accessible to administrators only.
                     </p>
                 </div>
                 <p className='text-xl font-bold mb-6'>
