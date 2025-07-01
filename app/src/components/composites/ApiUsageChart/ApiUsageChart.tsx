@@ -173,7 +173,7 @@ const ApiUsageChart: React.FC<ApiUsageChartProps> = ({
                                     position: 'left',
                                     width: 70,
                                     min: 0,
-                                    max: 1000,
+                                    max: 2000,
                                     // valueFormatter: (value) => {
                                     //     if (value >= 1000) {
                                     //         return `${(value / 1000).toFixed(1)}K`;
