@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect, useCallback } from 'react';
 import {
     Button,
     FormControl,
@@ -10,7 +10,7 @@ import {
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { AuthContext } from '@/auth/AuthContext';
-import { type } from './../../../types/api';
+import { StoredItem } from '@/auth/AuthProvider';
 
 const Login = () => {
     const [showPassword, setShowPassword] = React.useState<boolean>(false);
@@ -33,6 +33,10 @@ const Login = () => {
 
     const handleSumbit = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
+        handleSubmit();
+    };
+
+    const handleSubmit = () => {
         if (!auth) return;
         if (auth.login(password)) {
             console.log('success!');
@@ -41,14 +45,14 @@ const Login = () => {
         }
     };
 
-    const handleEnterSumbit = () => {
+    useEffect(() => {
         if (!auth) return;
-        if (auth.login(password)) {
-            console.log('success!');
-        } else {
-            alert('invalid password.');
+        const savedPassword = auth.getPasswordWithExpiry();
+        if (savedPassword && auth.login(savedPassword)) {
+            setPassword(savedPassword);
+            console.log('auto login success!');
         }
-    };
+    }, [auth]);
 
     return (
         <div className='w-full flex justify-center items-center text-[#2d4739]'>
@@ -100,7 +104,7 @@ const Login = () => {
                             }
                             onKeyDown={(e) => {
                                 if (e.key === 'Enter') {
-                                    handleEnterSumbit();
+                                    handleSubmit();
                                 }
                             }}
                         />

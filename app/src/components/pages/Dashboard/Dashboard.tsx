@@ -166,7 +166,7 @@ const Dashboard = () => {
                 </ItemWrapper>
                 <ItemWrapper
                     className='flex-1/5'
-                    link='https://github.com/algo-plus'
+                    link='https://github.com/algo-plus/algo-plus'
                 >
                     <TextWidgetContent
                         icon={<GitHubIcon fontSize='inherit' />}
