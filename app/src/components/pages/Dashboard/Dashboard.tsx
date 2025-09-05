@@ -136,7 +136,10 @@ const Dashboard = () => {
                 </div>
             </div>
             <div className='flex flex-wrap'>
-                <ItemWrapper className='flex-1/5'>
+                <ItemWrapper
+                    className='flex-1/5'
+                    link='https://chromewebstore.google.com/detail/algo-plus/egomkekembecbmlmmoflfdaobgkliiid'
+                >
                     <TextWidgetContent
                         icon={<PersonRoundedIcon fontSize='inherit' />}
                         iconClass='mb-1'
