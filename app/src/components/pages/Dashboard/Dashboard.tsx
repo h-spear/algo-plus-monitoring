@@ -145,16 +145,26 @@ const Dashboard = () => {
                         unit='사용자'
                     />
                 </ItemWrapper>
-                <ItemWrapper className='flex-1/5'>
+                <ItemWrapper
+                    className='flex-1/5'
+                    link='https://chromewebstore.google.com/detail/algo-plus/egomkekembecbmlmmoflfdaobgkliiid/reviews'
+                >
                     <TextWidgetContent
                         icon={<GradeRoundedIcon fontSize='inherit' />}
                         iconClass='text-yellow-500'
                         text={chromeWebStoreInfo?.rating}
                         textClass='text-4xl'
-                        unit={`평점 ${chromeWebStoreInfo?.comment}개`}
+                        unit={`평점 ${
+                            chromeWebStoreInfo.comment
+                                ? chromeWebStoreInfo.comment + '개'
+                                : ''
+                        }`}
                     />
                 </ItemWrapper>
-                <ItemWrapper className='flex-1/5'>
+                <ItemWrapper
+                    className='flex-1/5'
+                    link='https://github.com/algo-plus'
+                >
                     <TextWidgetContent
                         icon={<GitHubIcon fontSize='inherit' />}
                         iconClass='mb-2'
@@ -163,7 +173,10 @@ const Dashboard = () => {
                         unit='버전'
                     />
                 </ItemWrapper>
-                <ItemWrapper className='flex-1/5'>
+                <ItemWrapper
+                    className='flex-1/5'
+                    link='https://chromewebstore.google.com/detail/algo-plus/egomkekembecbmlmmoflfdaobgkliiid'
+                >
                     <TextWidgetContent
                         icon={<ChromeIcon size={28} />}
                         iconClass='mr-1.5'
@@ -172,7 +185,10 @@ const Dashboard = () => {
                         unit='버전'
                     />
                 </ItemWrapper>
-                <ItemWrapper className='flex-1/5'>
+                <ItemWrapper
+                    className='flex-1/5'
+                    link='https://github.com/algo-plus/algo-plus/graphs/contributors'
+                >
                     <TextWidgetContent
                         icon={<RocketIcon fontSize={28} />}
                         iconClass='mb-1'
@@ -187,7 +203,10 @@ const Dashboard = () => {
                 </ItemWrapper>
             </div>
             <div className='flex flex-wrap'>
-                <ItemWrapper className='flex-1/5'>
+                <ItemWrapper
+                    className='flex-1/5'
+                    link='https://www.jdoodle.com/'
+                >
                     <UsageDonutWidget
                         loading={loading}
                         title={
@@ -231,7 +250,10 @@ const Dashboard = () => {
                         }
                     />
                 </ItemWrapper>
-                <ItemWrapper className='flex-1/5'>
+                <ItemWrapper
+                    className='flex-1/5'
+                    link='https://ap-northeast-2.console.aws.amazon.com/cloudwatch/home?region=ap-northeast-2#home:'
+                >
                     <UsageDonutWidget
                         loading={loading}
                         title={
@@ -287,7 +309,10 @@ const Dashboard = () => {
                 <ItemWrapper className='flex-2/5' outline={false}>
                     <div className='flex w-full flex-col sm:flex-row'>
                         <div className='flex flex-1/2 flex-col'>
-                            <ItemWrapper className='flex-1/2'>
+                            <ItemWrapper
+                                className='flex-1/2'
+                                link='https://ap-northeast-2.console.aws.amazon.com/lambda/home?region=ap-northeast-2#/functions/AlgoPlusCompiler?subtab=triggers&tab=code'
+                            >
                                 <div className='flex flex-col w-full'>
                                     <p
                                         className={`text-gray-400 font-thin flex items-center w-full pl-2 pt-2 `}
@@ -307,7 +332,10 @@ const Dashboard = () => {
                                     </div>
                                 </div>
                             </ItemWrapper>
-                            <ItemWrapper className='flex-1/2'>
+                            <ItemWrapper
+                                className='flex-1/2'
+                                link='https://www.jdoodle.com/'
+                            >
                                 <div className='flex flex-col w-full'>
                                     <p
                                         className={`text-gray-400 font-thin flex items-center w-full pl-2 pt-2 `}

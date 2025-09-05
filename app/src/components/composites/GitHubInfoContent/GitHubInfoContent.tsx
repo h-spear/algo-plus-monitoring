@@ -18,6 +18,10 @@ interface GitHubInfoContentProps {
     loading: boolean;
 }
 
+const open = (link: string) => {
+    window.open(link, '_blank', 'noopener,noreferrer');
+};
+
 const GitHubInfoContent: React.FC<GitHubInfoContentProps> = ({
     data,
     className,
@@ -36,7 +40,14 @@ const GitHubInfoContent: React.FC<GitHubInfoContentProps> = ({
             {!loading ? (
                 <>
                     <div className='flex flex-col text-gray-700 text-sm mt-0'>
-                        <span className='flex items-center h-8 gap-2'>
+                        <span
+                            className='flex items-center h-8 gap-2 hover:bg-red-50 transition-all duration-300 px-2 rounded cursor-pointer'
+                            onClick={() => {
+                                open(
+                                    'https://github.com/algo-plus/algo-plus/branches'
+                                );
+                            }}
+                        >
                             <div className='w-8 flex justify-center text-gray-950'>
                                 <BranchIcon size={20} />
                             </div>
@@ -50,7 +61,14 @@ const GitHubInfoContent: React.FC<GitHubInfoContentProps> = ({
                                 개
                             </span>
                         </span>
-                        <span className='flex items-center h-8 gap-2'>
+                        <span
+                            className='flex items-center h-8 gap-2 hover:bg-red-50 transition-all duration-300 px-2 rounded cursor-pointer'
+                            onClick={() => {
+                                open(
+                                    'https://github.com/algo-plus/algo-plus/commits/main/'
+                                );
+                            }}
+                        >
                             <div className='w-8 flex justify-center text-gray-950'>
                                 <CommitRoundedIcon />
                             </div>
@@ -64,7 +82,14 @@ const GitHubInfoContent: React.FC<GitHubInfoContentProps> = ({
                                 개
                             </span>
                         </span>
-                        <span className='flex items-center h-8 gap-2'>
+                        <span
+                            className='flex items-center h-8 gap-2 hover:bg-red-50 transition-all duration-300 px-2 rounded cursor-pointer'
+                            onClick={() => {
+                                open(
+                                    'https://github.com/algo-plus/algo-plus/graphs/contributors'
+                                );
+                            }}
+                        >
                             <div className='w-8 flex justify-center text-gray-950'>
                                 <AccessibilityNewRoundedIcon />
                             </div>
@@ -78,7 +103,14 @@ const GitHubInfoContent: React.FC<GitHubInfoContentProps> = ({
                                 명
                             </span>
                         </span>
-                        <span className='flex items-center h-8 gap-2'>
+                        <span
+                            className='flex items-center h-8 gap-2 hover:bg-red-50 transition-all duration-300 px-2 rounded cursor-pointer'
+                            onClick={() => {
+                                open(
+                                    'https://github.com/algo-plus/algo-plus/stargazers'
+                                );
+                            }}
+                        >
                             <div className='w-8 flex justify-center text-gray-950'>
                                 <StarRoundedIcon />
                             </div>
@@ -92,7 +124,14 @@ const GitHubInfoContent: React.FC<GitHubInfoContentProps> = ({
                                 명
                             </span>
                         </span>
-                        <span className='flex items-center h-8 gap-2'>
+                        <span
+                            className='flex items-center h-8 gap-2 hover:bg-red-50 transition-all duration-300 px-2 rounded cursor-pointer'
+                            onClick={() => {
+                                open(
+                                    'https://github.com/algo-plus/algo-plus/forks'
+                                );
+                            }}
+                        >
                             <div className='w-8 flex justify-center text-gray-950'>
                                 <RestaurantRoundedIcon />
                             </div>
@@ -102,7 +141,14 @@ const GitHubInfoContent: React.FC<GitHubInfoContentProps> = ({
                                 번
                             </span>
                         </span>
-                        <span className='flex items-center h-8 gap-2'>
+                        <span
+                            className='flex items-center h-8 gap-2 hover:bg-red-50 transition-all duration-300 px-2 rounded cursor-pointer'
+                            onClick={() => {
+                                open(
+                                    'https://github.com/algo-plus/algo-plus/issues?q=is%3Aissue%20state%3Aopen'
+                                );
+                            }}
+                        >
                             <div className='w-8 flex justify-center text-gray-950'>
                                 <AdjustRoundedIcon />
                             </div>
@@ -116,7 +162,14 @@ const GitHubInfoContent: React.FC<GitHubInfoContentProps> = ({
                                 개
                             </span>
                         </span>
-                        <span className='flex items-center h-8 gap-2'>
+                        <span
+                            className='flex items-center h-8 gap-2 hover:bg-red-50 transition-all duration-300 px-2 rounded cursor-pointer'
+                            onClick={() => {
+                                open(
+                                    'https://github.com/algo-plus/algo-plus/pulls?q=is%3Apr+is%3Aopen+'
+                                );
+                            }}
+                        >
                             <div className='w-8 flex justify-center text-gray-950'>
                                 <PullRequestIcon size={22} />
                             </div>
@@ -128,7 +181,12 @@ const GitHubInfoContent: React.FC<GitHubInfoContentProps> = ({
                                 개
                             </span>
                         </span>
-                        <span className='flex items-center h-8 gap-2'>
+                        <span
+                            className='flex items-center h-8 gap-2 hover:bg-red-50 transition-all duration-300 px-2 rounded cursor-pointer'
+                            onClick={() => {
+                                open('https://github.com/algo-plus/algo-plus');
+                            }}
+                        >
                             <div className='w-8 flex justify-center text-gray-950'>
                                 <CodeRoundedIcon />
                             </div>
@@ -137,7 +195,14 @@ const GitHubInfoContent: React.FC<GitHubInfoContentProps> = ({
                                 <b>{data.version ? data.version : '0'}</b>
                             </span>
                         </span>
-                        <span className='flex items-center h-8 gap-2'>
+                        <span
+                            className='flex items-center h-8 gap-2 hover:bg-red-50 transition-all duration-300 px-2 rounded cursor-pointer'
+                            onClick={() => {
+                                open(
+                                    'https://github.com/algo-plus/algo-plus?tab=MIT-1-ov-file#readme'
+                                );
+                            }}
+                        >
                             <div className='w-8 flex justify-center text-gray-950'>
                                 <BalanceRoundedIcon />
                             </div>

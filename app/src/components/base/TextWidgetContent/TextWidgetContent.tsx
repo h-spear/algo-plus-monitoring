@@ -8,6 +8,7 @@ interface TextWidgetContentProps {
     unit?: string;
     iconClass?: string;
     textClass?: string;
+    link?: string;
 }
 
 const TextWidgetContent: React.FC<TextWidgetContentProps> = ({
