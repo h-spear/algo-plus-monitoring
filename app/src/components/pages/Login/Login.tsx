@@ -10,6 +10,7 @@ import {
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { AuthContext } from '@/auth/AuthContext';
+import { type } from './../../../types/api';
 
 const Login = () => {
     const [showPassword, setShowPassword] = React.useState<boolean>(false);
@@ -32,6 +33,15 @@ const Login = () => {
 
     const handleSumbit = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
+        if (!auth) return;
+        if (auth.login(password)) {
+            console.log('success!');
+        } else {
+            alert('invalid password.');
+        }
+    };
+
+    const handleEnterSumbit = () => {
         if (!auth) return;
         if (auth.login(password)) {
             console.log('success!');
@@ -88,6 +98,11 @@ const Login = () => {
                                     </IconButton>
                                 </InputAdornment>
                             }
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    handleEnterSumbit();
+                                }
+                            }}
                         />
                     </FormControl>
                 </div>
