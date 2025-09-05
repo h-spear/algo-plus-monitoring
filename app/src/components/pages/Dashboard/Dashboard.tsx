@@ -151,7 +151,7 @@ const Dashboard = () => {
                         iconClass='text-yellow-500'
                         text={chromeWebStoreInfo?.rating}
                         textClass='text-4xl'
-                        unit='평점'
+                        unit={`평점 ${chromeWebStoreInfo?.comment}개`}
                     />
                 </ItemWrapper>
                 <ItemWrapper className='flex-1/5'>

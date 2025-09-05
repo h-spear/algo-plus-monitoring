@@ -4,6 +4,7 @@ import React from 'react';
 interface TextWidgetContentProps {
     icon?: React.ReactNode;
     text: number | string;
+    subText?: number | string;
     unit?: string;
     iconClass?: string;
     textClass?: string;
@@ -12,6 +13,7 @@ interface TextWidgetContentProps {
 const TextWidgetContent: React.FC<TextWidgetContentProps> = ({
     icon,
     text,
+    subText,
     unit,
     iconClass,
     textClass,
@@ -22,7 +24,10 @@ const TextWidgetContent: React.FC<TextWidgetContentProps> = ({
             <div className='flex items-end'>
                 <h3 className={`text-dark ${textClass}`}>
                     {text ? (
-                        <>{text}</>
+                        <>
+                            {text}
+                            <span className='text-2xl'>{subText}</span>
+                        </>
                     ) : (
                         <CircularProgress color='primary' size={36} />
                     )}
